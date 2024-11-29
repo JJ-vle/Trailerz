@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test MongoDB</title>
+    <script>
+        // recup du film
+        async function fetchMovie() {
+            try {
+                const response = await fetch('/api/movie'); //API
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération des données');
+                }
+                const movie = await response.json();
+                document.getElementById('movie-details').innerHTML = `
+                    <h1>${movie.name}</h1>
+                    <img src="${movie.image}" alt="${movie.name}" style="width:200px;">
+                    <p><strong>Genre:</strong> ${movie.genre.join(', ')}</p>
+                    <p><strong>Réalisateur:</strong> ${movie.director.name}</p>
+                    <p><strong>Note:</strong> ${movie.aggregateRating.ratingValue}/10 (${movie.aggregateRating.ratingCount} votes)</p>
+                `;
+            } catch (err) {
+                console.error(err);
+                document.getElementById('movie-details').innerText = 'Erreur lors du chargement des données.';
+            }
+        }
+
+        // Chargement de la donnée
+        document.addEventListener('DOMContentLoaded', fetchMovie);
+    </script>
+</head>
+<body>
+    <div id="movie-details">Chargement des données...</div>
+</body>
+</html>
