@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Film</title>
+</head>
+<body>
+    <h1>Recherche de Film</h1>
+    
+    <label for="movie-name">Nom du film :</label>
+    <input type="text" id="movie-name" placeholder="Entrez le nom du film">
+    
+    <br><br>
+    
+    <label for="start-date">Date de sortie (début) :</label>
+    <input type="date" id="start-date">
+    
+    <label for="end-date">Date de sortie (fin) :</label>
+    <input type="date" id="end-date">
+    
+    <br><br>
+    
+    <label for="actors">Acteurs :</label>
+    <input type="text" id="actors" placeholder="Nom de l'acteur">
+    
+    <br><br>
+    
+    <label for="directors">Réalisateurs :</label>
+    <input type="text" id="directors" placeholder="Nom du réalisateur">
+    
+    <br><br>
+    
+    <label>Genres :</label>
+    <input type="checkbox" name="genre" value="Comedy"> Comédie
+    <input type="checkbox" name="genre" value="Action"> Action
+    <input type="checkbox" name="genre" value="Drama"> Drame
+    <input type="checkbox" name="genre" value="Fantasy"> Fantasy
+    <!-- Ajoute d'autres genres si nécessaire -->
+    
+    <br><br>
+    
+    <label for="min-duration">Durée minimale (en heures et minutes) :</label>
+    <input type="text" id="min-duration" placeholder="Ex : 1h30">
+    
+    <label for="max-duration">Durée maximale (en heures et minutes) :</label>
+    <input type="text" id="max-duration" placeholder="Ex : 2h45">
+
+    <br><br>
+    
+    <button onclick="searchMovie()">Rechercher</button>
+    
+    <div id="movie-details"></div>
+
+    <script src="searchMovie.js"></script>  <!-- Inclure le fichier JavaScript -->
+</body>
+</html>

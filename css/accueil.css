@@ -1,0 +1,107 @@
+body {
+    background-color: #1a1a1a;
+    margin: 0% 10% 0% 10%;
+}
+
+.navigation-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px;
+    box-sizing: border-box;
+    overflow: hidden;
+    max-width: auto;
+    max-height: 100px;
+    height: auto;
+    background-color: black;
+}
+
+.trailerz-logo, .movies-tabs, .research-area, .personnal-tabs {
+    flex-basis: 25%;
+    flex-shrink: 0;
+    flex-grow: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.trailerz-logo img {
+    max-width: 100%;
+    height: fit-content;
+    min-width: 90px;
+    min-height: 45px;
+    object-fit: contain;
+    display: block;
+}
+
+.movies-tabs, .personnal-tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.movies-tabs ul, .personnal-tabs ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+.movies-tabs a, .personnal-tabs a {
+    text-decoration: none;
+    color: white;
+    font-size: 38px;
+}
+
+.movies-tabs a:hover, .personnal-tabs a:hover {
+    text-decoration: underline;
+}
+
+.research-area {
+    display: flex; /* Flexbox pour aligner les enfants */
+    justify-content: space-between; /* Espace entre l'input et le bouton */
+    align-items: center; /* Aligne verticalement les éléments */
+    width: 100%; /* La zone de recherche occupe toute la largeur disponible */
+    height: 100%; /* La zone de recherche occupe toute la hauteur disponible */
+    gap: 10px; /* Espacement entre les éléments */
+}
+
+.research-area input {
+    flex-grow: 1; /* Le champ de recherche s'étire pour occuper l'espace disponible */
+    padding: 10px; /* Ajoute un espace intérieur pour l'esthétique */
+    font-size: 16px; /* Taille de la police */
+    height: 100%; /* Prend toute la hauteur de la zone */
+    box-sizing: border-box; /* Inclut les bordures et le padding */
+    border: 1px solid #ccc; /* Bordure fine pour le champ */
+    border-radius: 5px; /* Coins arrondis */
+}
+
+.research-area button {
+    flex-grow: 0; /* Le bouton ne s'étire pas */
+    flex-shrink: 0; /* Le bouton ne rétrécit pas */
+    width: 50px; /* Largeur fixe pour le bouton */
+    height: 100%; /* Prend toute la hauteur de la zone */
+    display: flex; /* Centre le contenu du bouton */
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    border: none; /* Supprime les bordures */
+    border-radius: 5px; /* Coins arrondis */
+    cursor: pointer; /* Change le curseur au survol */
+}
+
+.research-area button img {
+    max-width: 100%; /* L'image occupe toute la largeur du bouton */
+    max-height: 100%; /* L'image occupe toute la hauteur du bouton */
+    object-fit: contain; /* Conserve les proportions */
+    filter: invert(1);
+}
+
+#top-tendances img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
