@@ -1,35 +1,11 @@
-module.exports = (app, mongoose) => {
-    //schema du modele
-    const movieSchema = new mongoose.Schema({
-        _id: mongoose.Schema.Types.ObjectId,
-        '@context': String,
-        '@type': String,
-        url: String,
-        name: String,
-        image: String,
-        genre: [String],
-        director: {
-            '@type': String,
-            url: String,
-            name: String,
-        },
-        aggregateRating: {
-            '@type': String,
-            ratingCount: Number,
-            bestRating: String,
-            worstRating: String,
-            ratingValue: String,
-        },
-    });
-
-    const Movie = mongoose.model('Movie', movieSchema, 'trailerz');
-
-    //////// ROUTE ////////
+module.exports = (app, mongoose, Movie) => {
+    // Route pour récupérer un film aléatoire
     app.get('/api/random-movie', async (req, res) => {
         try {
             const count = await Movie.countDocuments();
             const randomIndex = Math.floor(Math.random() * count);
-            const movie = await Movie.findOne().skip(randomIndex); //recup film aleatoire
+            const movie = await Movie.findOne().skip(randomIndex); // Récupérer un film aléatoire
+
             if (movie) {
                 res.json(movie);
             } else {
