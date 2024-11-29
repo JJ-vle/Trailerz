@@ -79,6 +79,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'html/test.html'));
 });
 
+// Page de test de recherche
+app.get('/search', (req, res) => {
+    res.sendFile(path.join(__dirname, 'html/search_movie.html'));
+});
+
 // Démarrage du serveur
 app.listen(PORT, () => {
     console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
