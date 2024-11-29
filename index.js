@@ -67,11 +67,11 @@ fs.readdirSync(fonctionnalitesDir).forEach((file) => {
     if (file.endsWith('.js')) {
         const routePath = path.join(fonctionnalitesDir, file);
         console.log(`Chargement de la fonctionnalité : ${file}`);
-        require(routePath)(app, mongoose, Movie); //recuperation modele Movie pour les autres instances
+        require(routePath)(app, mongoose, Movie); // Passer le modèle Movie ici
     }
 });
 
-//directory de tous les html
+// Middleware pour servir les fichiers HTML
 app.use(express.static(path.join(__dirname, 'html')));
 
 // Route pour la page de test
