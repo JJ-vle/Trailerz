@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test MongoDB</title>
+
+    <!-- Test : affichage d'un film random depuis la BD -->
     <script>
-        // recup du film
-        async function fetchMovie() {
+        async function fetchRandomMovie() {
             try {
-                const response = await fetch('/api/movie'); //API
+                const response = await fetch('/api/random-movie');
                 if (!response.ok) {
-                    throw new Error('Erreur lors de la récupération des données');
+                    throw new Error('Erreur lors de la récupération des données du film');
                 }
                 const movie = await response.json();
+                
                 document.getElementById('movie-details').innerHTML = `
                     <h1>${movie.name}</h1>
                     <img src="${movie.image}" alt="${movie.name}" style="width:200px;">
@@ -25,12 +27,12 @@
                 document.getElementById('movie-details').innerText = 'Erreur lors du chargement des données.';
             }
         }
-
-        // Chargement de la donnée
-        document.addEventListener('DOMContentLoaded', fetchMovie);
+        document.addEventListener('DOMContentLoaded', fetchRandomMovie);
     </script>
+
 </head>
 <body>
+    <h1>Film Aléatoire</h1>
     <div id="movie-details">Chargement des données...</div>
 </body>
 </html>

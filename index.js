@@ -1,24 +1,24 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const fs = require('fs');
 
-//creation avec express
+// creation appli avec express
 const app = express();
-
 const PORT = 2030;
 
-// connexion mongo
+// connexion MongoDB
 mongoose.connect('mongodb://localhost:27017/trailerz', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
-    console.log('Connexion à MongoDB réussie');
+    console.log('Connexion à Mongo OK');
 }).catch((err) => {
-    console.error('Erreur de connexion à MongoDB:', err);
+    console.error('Erreur de connexion mongo :', err);
 });
 
-//logs au cas ou
-mongoose.connection.on('connected', () => {
+// surveillance de la connexion a la BD si ok ou non
+mongoose.connection.on('connecte', () => {
     console.log('MongoDB connecté sur mongodb://localhost:27017/trailerz');
 });
 
@@ -26,76 +26,35 @@ mongoose.connection.on('error', (err) => {
     console.error('Erreur de connexion à MongoDB:', err);
 });
 
-//schema pour Trailerz via la BD
-const movieSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    '@context': String,
-    '@type': String,
-    url: String,
-    name: String,
-    image: String,
-    genre: [String],
-    director: {
-        '@type': String,
-        url: String,
-        name: String,
-    },
-    creator: {
-        '@type': String,
-        url: String,
-    },
-    keywords: String,
-    aggregateRating: {
-        '@type': String,
-        ratingCount: Number,
-        bestRating: String,
-        worstRating: String,
-        ratingValue: String,
-    },
-    review: {
-        '@type': String,
-    },
-    itemReviewed: {
-        '@type': String,
-        url: String,
-    },
-    author: {
-        '@type': String,
-        name: String,
-    },
-    dateCreated: String,
-    inLanguage: String,
-    reviewBody: String,
-    duration: String,
+///////////// ROUTES /////////////
+// charger les fonctionnalites (evite de surcharger l'index)
+const fonctionnalitesDir = path.join(__dirname, 'fonctionnalites_js');
+
+// verification existance du dossier des routes
+if (!fs.existsSync(fonctionnalitesDir)) {
+    console.error(`Le dossier "${fonctionnalitesDir}" est introuvable.`);
+    process.exit(1);
+}
+
+fs.readdirSync(fonctionnalitesDir).forEach((file) => {
+    if (file.endsWith('.js')) {
+        const routePath = path.join(fonctionnalitesDir, file);
+        console.log(`Chargement de la fonctionnalité : ${file}`);
+        require(routePath)(app, mongoose);
+    }
 });
 
-//modèle pour Trailerz
-const Movie = mongoose.model('Movie', movieSchema, 'trailerz');
+//middleware pour servir les fichiers html
 app.use(express.static(path.join(__dirname, 'html')));
 
-// Route du html
+// on envoie dans la page de test
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'html/test.html'));
 });
 
 
-// api pour faire appel aux films de la BD
-app.get('/api/movie', async (req, res) => {
-    try {
-        // recuperation d'un film aleatoire juste pour tester
-        const movie = await Movie.findOne();
-        if (movie) {
-            res.json(movie);
-        } else {
-            res.status(404).send('Aucun film trouvé');
-        }
-    } catch (err) {
-        console.error('Erreur lors de la récupération du film :', err);
-        res.status(500).send('Erreur serveur');
-    }
-});
 
-//LANCEMENT SERVEUR JS
+///// DEMARRAGE SERVEUR /////
 app.listen(PORT, () => {
     console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
 });
