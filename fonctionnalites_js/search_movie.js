@@ -43,6 +43,7 @@ module.exports = (app, mongoose) => {
         }
 
         return (hours * 60) + minutes;
+        //return `${hours > 0 ? hours + 'h' : ''}${minutes > 0 ? minutes : ''}`;
     }
 
     // Route de recherche de film
@@ -98,22 +99,27 @@ module.exports = (app, mongoose) => {
         // Recherche par durée (si une seule valeur est présente)
         if (minDuration || maxDuration) {
             let minMinutes = minDuration ? durationToMinutes(minDuration) : 0;
-            let maxMinutes = maxDuration ? durationToMinutes(maxDuration) : 10000;
-
-            if (minDuration && !maxDuration) {
-                // Si seule une durée minimale est définie
-                query.duration = { $gte: `PT${minMinutes / 60}H${minMinutes % 60}M` }; // Minimum durée
-            } else if (!minDuration && maxDuration) {
-                // Si seule une durée maximale est définie
-                query.duration = { $lte: `PT${maxMinutes / 60}H${maxMinutes % 60}M` }; // Maximum durée
-            } else {
-                // Si les deux durées (min et max) sont définies
-                query.duration = { 
-                    $gte: `PT${minMinutes / 60}H${minMinutes % 60}M`, 
-                    $lte: `PT${maxMinutes / 60}H${maxMinutes % 60}M` 
-                }; // Durée comprise entre min et max
+            let maxMinutes = maxDuration ? durationToMinutes(maxDuration) : Number.MAX_SAFE_INTEGER;
+        
+            // Filtrer les résultats après avoir récupéré les films
+            try {
+                const movies = await Movie.find(query);
+                const filteredMovies = movies.filter(movie => {
+                    const movieMinutes = durationToMinutes(movie.duration);
+                    return movieMinutes >= minMinutes && movieMinutes <= maxMinutes;
+                });
+        
+                if (filteredMovies.length > 0) {
+                    res.json(filteredMovies);
+                } else {
+                    res.status(404).send({ message: 'Aucun film trouvé avec ces critères.' });
+                }
+            } catch (err) {
+                console.error('Erreur lors de la recherche des films:', err);
+                res.status(500).send({ message: 'Erreur serveur !' });
             }
         }
+        
 
         try {
             const movies = await Movie.find(query);
