@@ -183,10 +183,10 @@ fs.readdirSync(fonctionnalitesDir).forEach((file) => {
 
 
 // Middleware pour servir les fichiers HTML
-app.use(express.static(path.join(__dirname, 'html')));
+app.use(express.static(path.join(__dirname, './')));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'template_api_front/test.html'));
+    res.sendFile(path.join(__dirname, 'template_api_front/template_page_accueil.html'));
 });
 
 app.get('/search', (req, res) => {
