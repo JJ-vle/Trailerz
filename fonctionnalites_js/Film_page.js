@@ -1,47 +1,94 @@
+const fs = require('fs');
+const path = require('path');
+
 module.exports = (app, mongoose, Movie) => {
-    // Route pour afficher un film par son ID
+    const formatDuration = (duration) => {
+        const regex = /^PT(\d+H)?(\d+M)?$/;
+        const matches = duration.match(regex);
+        if (!matches) return 'Rien à afficher';
+
+        let hours = 0;
+        let minutes = 0;
+
+        if (matches[1]) {
+            hours = parseInt(matches[1].replace('H', ''), 10);
+        }
+        if (matches[2]) {
+            minutes = parseInt(matches[2].replace('M', ''), 10);
+        }
+
+        return `${hours > 0 ? hours + 'h' : ''}${minutes > 0 ? minutes : ''}`;
+    };
+
+    const generateStars = (ratingValue) => {
+        const totalStars = 10;
+        const filledStars = Math.round(ratingValue);
+        const emptyStars = totalStars - filledStars;
+        let stars = '';
+        for (let i = 0; i < filledStars; i++) {
+            stars += '★';
+        }
+        for (let i = 0; i < emptyStars; i++) {
+            stars += '☆';
+        }
+        return stars;
+    };
+
+    const addImdbUrl = (url) => {
+        return url ? `https://www.imdb.com/${url}` : '#';
+    };
+
     app.get('/film/:id', async (req, res) => {
-        const movieId = req.params.id;  // Récupère l'ID du film depuis l'URL
+        const movieId = req.params.id;
 
         try {
-            // Chercher le film par son ObjectId
             const movie = await Movie.findById(movieId);
             if (!movie) {
                 return res.status(404).send('Film non trouvé');
             }
 
-            // Rendre une page HTML avec les informations du film
-            res.send(`
-                <!DOCTYPE html>
-                <html lang="fr">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>${movie.name}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; }
-                        img { width: 300px; }
-                        h1 { color: #333; }
-                        p { font-size: 18px; }
-                        a { text-decoration: none; color: #007bff; }
-                    </style>
-                </head>
-                <body>
-                    <h1>${movie.name}</h1>
-                    <img src="${movie.image}" alt="${movie.name}">
-                    <p><strong>Genre:</strong> ${movie.genre.join(', ')}</p>
-                    <p><strong>Réalisateur:</strong> ${movie.director.name}</p>
-                    <p><strong>Note:</strong> ${movie.aggregateRating.ratingValue}/10 (${movie.aggregateRating.ratingCount} votes)</p>
-                    <p><strong>Résumé:</strong> ${movie.reviewBody || 'Aucun résumé disponible'}</p>
-                    <p><strong>Date de création:</strong> ${movie.dateCreated}</p>
-                    <p><strong>Durée:</strong> ${movie.duration}</p>
-                    <a href="/">Retour à l'accueil</a>
-                </body>
-                </html>
-            `);
+            // Lire le fichier HTML
+            const filePath = path.join(__dirname, '../template_api_front/template_film_page.html');
+            let htmlContent = fs.readFileSync(filePath, 'utf8');
+
+            // Remplacer les placeholders dans le fichier HTML
+            htmlContent = htmlContent.replace(/{{name}}/g, movie.name || 'Film non trouvé');
+            htmlContent = htmlContent.replace(/{{image}}/g, movie.image || 'https://via.placeholder.com/500x750?text=Image+indisponible');
+            htmlContent = htmlContent.replace(/{{url}}/g, addImdbUrl(movie.url));
+            htmlContent = htmlContent.replace(/{{description}}/g, movie.description || 'Rien à afficher');
+            htmlContent = htmlContent.replace(/{{type}}/g, movie['@type'] || 'Rien à afficher');
+            htmlContent = htmlContent.replace(/{{duration}}/g, movie.duration ? formatDuration(movie.duration) : 'Rien à afficher');
+            htmlContent = htmlContent.replace(/{{ratingStars}}/g, movie.aggregateRating ? generateStars(movie.aggregateRating.ratingValue) : 'Rien à afficher');
+            htmlContent = htmlContent.replace(/{{ratingValue}}/g, movie.aggregateRating ? movie.aggregateRating.ratingValue : 'Rien à afficher');
+            htmlContent = htmlContent.replace(/{{bestRating}}/g, movie.aggregateRating ? movie.aggregateRating.bestRating : 'Rien à afficher');
+            htmlContent = htmlContent.replace(/{{worstRating}}/g, movie.aggregateRating ? movie.aggregateRating.worstRating : 'Rien à afficher');
+            htmlContent = htmlContent.replace(/{{ratingCount}}/g, movie.aggregateRating ? movie.aggregateRating.ratingCount : 'Rien à afficher');
+
+            // Injecter les acteurs, réalisateurs, créateurs etc.
+            htmlContent = htmlContent.replace(/{{actors}}/g, movie.actor && movie.actor.length > 0 ? movie.actor.map(actor => `
+                <p><strong>${actor.name || 'Acteur inconnu'}</strong> - <a href="${addImdbUrl(actor.url)}">Voir profil</a></p>
+            `).join('') : '<p>Rien à afficher</p>');
+
+            htmlContent = htmlContent.replace(/{{directors}}/g, movie.director ? `
+                <p><strong>${movie.director.name}</strong> - <a href="${addImdbUrl(movie.director.url)}">Voir profil</a></p>
+            ` : '<p>Rien à afficher</p>');
+
+            htmlContent = htmlContent.replace(/{{creators}}/g, movie.creator && movie.creator.some(creator => creator.name) ? `
+                ${movie.creator.map(creator => creator.name ? `
+                    <p><strong>${creator.name || 'Créateur inconnu'}</strong> - <a href="${addImdbUrl(creator.url)}">Voir profil</a></p>
+                ` : '').join('')}
+            ` : '<p>Rien à afficher</p>');
+
+            // Autres informations
+            htmlContent = htmlContent.replace(/{{keywords}}/g, movie.keywords && movie.keywords.length > 0 ? movie.keywords.join(', ') : 'Rien à afficher');
+            htmlContent = htmlContent.replace(/{{budget}}/g, movie.budget || 'Rien à afficher');
+            htmlContent = htmlContent.replace(/{{trailerUrl}}/g, addImdbUrl(movie.trailer ? movie.trailer.embedUrl : '#'));
+
+            // Envoyer le contenu HTML
+            res.send(htmlContent);
 
         } catch (err) {
-            console.error('Erreur lors de la récupération du film:', err);
+            console.error('Erreur:', err);
             res.status(500).send('Erreur serveur');
         }
     });
