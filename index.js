@@ -163,7 +163,7 @@ const movieSchema = new mongoose.Schema({
 const Movie = mongoose.models.Movie || mongoose.model('Movie', movieSchema, 'trailerz');
 
 // Charger les fonctionnalités (évite de surcharger l'index)
-const fonctionnalitesDir = path.join(__dirname, 'fonctionnalites_js');
+const fonctionnalitesDir = path.join(__dirname, 'liaisonBackFront');
 
 // Vérification existence du dossier des routes
 if (!fs.existsSync(fonctionnalitesDir)) {
@@ -175,22 +175,31 @@ fs.readdirSync(fonctionnalitesDir).forEach((file) => {
     if (file.endsWith('.js')) {
         const routePath = path.join(fonctionnalitesDir, file);
         console.log(`Chargement de la fonctionnalité : ${file}`);
-        require(routePath)(app, mongoose, Movie); // Passer le modèle Movie ici
+        require(routePath)(app, mongoose, Movie);
     }
 });
+
+
+
 
 // Middleware pour servir les fichiers HTML
 app.use(express.static(path.join(__dirname, 'html')));
 
-// Route pour la page de test
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'html/test.html'));
+    res.sendFile(path.join(__dirname, 'template_api_front/test.html'));
 });
 
-// Page de test de recherche
 app.get('/search', (req, res) => {
-    res.sendFile(path.join(__dirname, 'html/search_movie.html'));
+    res.sendFile(path.join(__dirname, 'template_api_front/recherche_page.html'));
 });
+
+app.get('/random', (req, res) => {
+    res.sendFile(path.join(__dirname, 'template_api_front/random_by_category_page.html'));
+});
+
+
+
+
 
 // Démarrage du serveur
 app.listen(PORT, () => {

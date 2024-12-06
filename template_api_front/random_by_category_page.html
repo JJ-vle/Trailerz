@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Film Aléatoire par Catégorie</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #333;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+        .container {
+            background-color: black;
+            border-radius: 8px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        img {
+            width: 200px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+        a {
+            color: #ff6347;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .category {
+            margin: 5px 15px;
+        }
+    </style>
+    <script>
+        async function fetchRandomMovie() {
+            const selectedCategories = [];
+            const categoryInputs = document.querySelectorAll('input[name="category"]:checked');
+            categoryInputs.forEach(input => {
+                selectedCategories.push(input.value);
+            });
+
+            if (selectedCategories.length === 0) {
+                alert('Veuillez sélectionner au moins une catégorie');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/film-aleatoire?categories=${selectedCategories.join(',')}`);
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la récupération des données du film');
+                }
+                const movie = await response.json();
+
+                document.getElementById('movie-details').innerHTML = `
+                    <a href="./film/${movie.id}" target="_blank">
+                    <h1>${movie.name}</h1>
+                    <img src="${movie.image}" alt="${movie.name}">
+                    </a>
+                    <p><strong>Genre:</strong> ${movie.genre.join(', ')}</p>
+                    <p><strong>Réalisateur:</strong> <a href="${movie.director.url}" target="_blank">${movie.director.name}</a></p>
+                    <p><strong>Note:</strong> ${movie.aggregateRating.ratingValue}/10 (${movie.aggregateRating.ratingCount} votes)</p>
+                `;
+            } catch (err) {
+                console.error(err);
+                document.getElementById('movie-details').innerText = 'Erreur lors du chargement des données.';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Film Aléatoire par Catégorie</h1>
+
+        <div class="categories">
+            <div class="category">
+                <input type="checkbox" id="action" name="category" value="Action">
+                <label for="action">Action</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="adult" name="category" value="Adult">
+                <label for="adult">Adult</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="adventure" name="category" value="Adventure">
+                <label for="adventure">Adventure</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="animation" name="category" value="Animation">
+                <label for="animation">Animation</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="biography" name="category" value="Biography">
+                <label for="biography">Biography</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="comedy" name="category" value="Comedy">
+                <label for="comedy">Comedy</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="crime" name="category" value="Crime">
+                <label for="crime">Crime</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="documentary" name="category" value="Documentary">
+                <label for="documentary">Documentary</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="drama" name="category" value="Drama">
+                <label for="drama">Drama</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="family" name="category" value="Family">
+                <label for="family">Family</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="fantasy" name="category" value="Fantasy">
+                <label for="fantasy">Fantasy</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="film-noir" name="category" value="Film-Noir">
+                <label for="film-noir">Film-Noir</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="game-show" name="category" value="Game-Show">
+                <label for="game-show">Game-Show</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="history" name="category" value="History">
+                <label for="history">History</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="horror" name="category" value="Horror">
+                <label for="horror">Horror</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="music" name="category" value="Music">
+                <label for="music">Music</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="musical" name="category" value="Musical">
+                <label for="musical">Musical</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="mystery" name="category" value="Mystery">
+                <label for="mystery">Mystery</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="news" name="category" value="News">
+                <label for="news">News</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="reality-tv" name="category" value="Reality-TV">
+                <label for="reality-tv">Reality-TV</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="romance" name="category" value="Romance">
+                <label for="romance">Romance</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="sci-fi" name="category" value="Sci-Fi">
+                <label for="sci-fi">Sci-Fi</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="short" name="category" value="Short">
+                <label for="short">Short</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="sport" name="category" value="Sport">
+                <label for="sport">Sport</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="talk-show" name="category" value="Talk-Show">
+                <label for="talk-show">Talk-Show</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="thriller" name="category" value="Thriller">
+                <label for="thriller">Thriller</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="war" name="category" value="War">
+                <label for="war">War</label>
+            </div>
+            <div class="category">
+                <input type="checkbox" id="western" name="category" value="Western">
+                <label for="western">Western</label>
+            </div>
+        </div>
+        
+
+        <button onclick="fetchRandomMovie()">Rechercher un film aléatoire</button>
+
+
+        <div id="movie-details"></div>
+    </div>
+
+</body>
+</html>

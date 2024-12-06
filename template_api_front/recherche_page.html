@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Films</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #222;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        .search-container {
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .search-container h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .search-container input, .search-container select, .search-container button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .search-container .genres {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+            padding: 10px;
+            background: #444;
+            border-radius: 4px;
+        }
+        .search-container .genres label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        .search-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #ff6347;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            color: white;
+            cursor: pointer;
+        }
+        .search-container button:hover {
+            background-color: #e5533b;
+        }
+        .results {
+            margin-top: 30px;
+        }
+        .movie {
+            display: flex;
+            gap: 20px;
+            background: #444;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .movie img {
+            flex-shrink: 0;
+            width: 150px;
+            height: auto;
+            border-radius: 8px;
+        }
+        .movie-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .movie h2 {
+            margin: 10px 0;
+        }
+        .movie p {
+            margin: 5px 0;
+        }
+        .movie a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        async function searchMovies() {
+            const name = document.getElementById('name').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            const genres = Array.from(document.querySelectorAll('input[name="genre"]:checked'))
+                .map((checkbox) => checkbox.value)
+                .join(',');
+
+            const minDuration = document.getElementById('minDuration').value;
+            const maxDuration = document.getElementById('maxDuration').value;
+
+            let query = `?name=${name}&startDate=${startDate}&endDate=${endDate}&genres=${genres}&minDuration=${minDuration}&maxDuration=${maxDuration}`;
+
+            try {
+                const response = await fetch(`/api/search-movie${query}`);
+                if (!response.ok) throw new Error('Erreur lors de la recherche');
+                const movies = await response.json();
+
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = '';
+                movies.forEach(movie => {
+                    resultsDiv.innerHTML += `
+                        <a href="./film/${movie.id}" target="_blank">
+                            <div class="movie">
+                                <img src="${movie.image}" alt="${movie.name}">
+                            
+                            <div class="movie-content">
+                                <h2>${movie.name}</h2>
+                        </a>
+                                <p><strong>Genres:</strong> ${movie.genre.join(', ')}</p>
+                                <p><strong>Réalisateur:</strong> <a href="${movie.director.url}" target="_blank">${movie.director.name}</a></p>
+                                <p><strong>Durée:</strong> ${movie.duration}</p>
+                                <p><strong>Note:</strong> ${movie.aggregateRating.ratingValue}/10 (${movie.aggregateRating.ratingCount} votes)</p>
+                                <p><strong>Date de publication:</strong> ${movie.datePublished}</p>
+                            </div>
+                            </div>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+                document.getElementById('results').innerHTML = '<p>Erreur lors du chargement des films.</p>';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="search-container">
+        <h1>Recherche de Films</h1>
+        <input id="name" type="text" placeholder="Nom du film">
+        <input id="startDate" type="date" placeholder="Date de début">
+        <input id="endDate" type="date" placeholder="Date de fin">
+        
+        <div class="genres">
+            <strong>Sélectionnez des genres :</strong><br>
+            <label><input type="checkbox" name="genre" value="Action"> Action</label>
+            <label><input type="checkbox" name="genre" value="Adult"> Adult</label>
+            <label><input type="checkbox" name="genre" value="Adventure"> Adventure</label>
+            <label><input type="checkbox" name="genre" value="Animation"> Animation</label>
+            <label><input type="checkbox" name="genre" value="Biography"> Biography</label>
+            <label><input type="checkbox" name="genre" value="Comedy"> Comedy</label>
+            <label><input type="checkbox" name="genre" value="Crime"> Crime</label>
+            <label><input type="checkbox" name="genre" value="Documentary"> Documentary</label>
+            <label><input type="checkbox" name="genre" value="Drama"> Drama</label>
+            <label><input type="checkbox" name="genre" value="Family"> Family</label>
+            <label><input type="checkbox" name="genre" value="Fantasy"> Fantasy</label>
+            <label><input type="checkbox" name="genre" value="Film-Noir"> Film-Noir</label>
+            <label><input type="checkbox" name="genre" value="Game-Show"> Game-Show</label>
+            <label><input type="checkbox" name="genre" value="History"> History</label>
+            <label><input type="checkbox" name="genre" value="Horror"> Horror</label>
+            <label><input type="checkbox" name="genre" value="Music"> Music</label>
+            <label><input type="checkbox" name="genre" value="Musical"> Musical</label>
+            <label><input type="checkbox" name="genre" value="Mystery"> Mystery</label>
+            <label><input type="checkbox" name="genre" value="News"> News</label>
+            <label><input type="checkbox" name="genre" value="Reality-TV"> Reality-TV</label>
+            <label><input type="checkbox" name="genre" value="Romance"> Romance</label>
+            <label><input type="checkbox" name="genre" value="Sci-Fi"> Sci-Fi</label>
+            <label><input type="checkbox" name="genre" value="Short"> Short</label>
+            <label><input type="checkbox" name="genre" value="Sport"> Sport</label>
+            <label><input type="checkbox" name="genre" value="Talk-Show"> Talk-Show</label>
+            <label><input type="checkbox" name="genre" value="Thriller"> Thriller</label>
+            <label><input type="checkbox" name="genre" value="War"> War</label>
+            <label><input type="checkbox" name="genre" value="Western"> Western</label>
+        </div>
+        
+        <input id="minDuration" type="text" placeholder="Durée minimale (ex: PT1H30M)">
+        <input id="maxDuration" type="text" placeholder="Durée maximale (ex: PT2H)">
+        <button onclick="searchMovies()">Rechercher</button>
+    </div>
+    <div id="results" class="results"></div>
+</body>
+</html>
