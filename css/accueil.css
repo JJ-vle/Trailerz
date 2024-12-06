@@ -1,8 +1,38 @@
+/* CORPS DU DOCUMENT */
 body {
+    justify-content: center;
     background-color: #1a1a1a;
     margin: 0% 10% 0% 10%;
+    height: 100%;
+
 }
 
+
+/* TITRES DES CATEGORIES */
+h1,p, a {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.highlighted-title {
+    position: relative;
+    letter-spacing: 2px;
+    display: inline-block;
+}
+  
+  .highlighted-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 50%;
+    background-color: #720000;
+    z-index: -1;
+  }
+
+
+/* BARRE DE NAVIGATION */
 .navigation-bar {
     display: flex;
     justify-content: space-between;
@@ -61,42 +91,42 @@ body {
 }
 
 .research-area {
-    display: flex; /* Flexbox pour aligner les enfants */
-    justify-content: space-between; /* Espace entre l'input et le bouton */
-    align-items: center; /* Aligne verticalement les éléments */
-    width: 100%; /* La zone de recherche occupe toute la largeur disponible */
-    height: 100%; /* La zone de recherche occupe toute la hauteur disponible */
-    gap: 10px; /* Espacement entre les éléments */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    gap: 10px;
 }
 
 .research-area input {
-    flex-grow: 1; /* Le champ de recherche s'étire pour occuper l'espace disponible */
-    padding: 10px; /* Ajoute un espace intérieur pour l'esthétique */
-    font-size: 16px; /* Taille de la police */
-    height: 100%; /* Prend toute la hauteur de la zone */
-    box-sizing: border-box; /* Inclut les bordures et le padding */
-    border: 1px solid #ccc; /* Bordure fine pour le champ */
-    border-radius: 5px; /* Coins arrondis */
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .research-area button {
-    flex-grow: 0; /* Le bouton ne s'étire pas */
-    flex-shrink: 0; /* Le bouton ne rétrécit pas */
-    width: 50px; /* Largeur fixe pour le bouton */
-    height: 100%; /* Prend toute la hauteur de la zone */
-    display: flex; /* Centre le contenu du bouton */
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 50px;
+    height: 100%;
+    display: flex;
     justify-content: center;
     align-items: center;
     background-color: black;
-    border: none; /* Supprime les bordures */
-    border-radius: 5px; /* Coins arrondis */
-    cursor: pointer; /* Change le curseur au survol */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .research-area button img {
-    max-width: 100%; /* L'image occupe toute la largeur du bouton */
-    max-height: 100%; /* L'image occupe toute la hauteur du bouton */
-    object-fit: contain; /* Conserve les proportions */
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
     filter: invert(1);
 }
 
@@ -104,4 +134,132 @@ body {
     display: block;
     width: 100%;
     height: auto;
+}
+
+
+.separator {
+    width: 40%;
+    height: 25px;
+    background-color: white;
+    border-radius: 10px;
+    margin: 50px auto 0;
+}
+
+
+/* CAROUSSELS DE FILMS */
+.carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+    margin: auto;
+    overflow: hidden;
+}
+  
+.carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+  
+.movie {
+    flex: 0 0 calc(33.333% - 10px);
+    margin-right: 5px;
+    margin-left: 5px;
+    background-color: #222;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.movie:last-child {
+    margin: 0 0 0 0;
+}
+
+.movie img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.movie:hover {
+    transform: scale(1.1);
+}
+
+.button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 20px;
+    z-index: 10;
+}
+
+.button:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #000;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+.carousel-container:hover .button {
+    visibility: visible;
+}
+
+.button {
+    visibility: hidden;
+}
+
+
+/* FOOTER */
+.footer {
+    background-color: #720000;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    border-radius: 30px 30px 0 0;
+    width: fit-content;
+    height:min-content;
+    margin: 50px auto auto;
+
+  }
+  
+.footer-container {
+    margin: 0 auto;
+}
+  
+.footer-links {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+  
+.footer-links a {
+    color: white;
+    margin: 0 10px 0 10px;
+    text-decoration: none;
+    font-size: 2rem;
+}
+  
+.footer-links a:hover {
+    text-decoration: underline;
+}
+  
+.footer-container p {
+    font-size: 2rem;
+    margin: auto;
+}
+  
+.footer-container img {
+    width: 40%;
 }
