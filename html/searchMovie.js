@@ -1,13 +1,12 @@
 // Fonction pour convertir la durée entrée par l'utilisateur en format ISO 8601
 function convertDurationToISO(duration) {
-    // Exemple d'entrée : "1h30" ou "2h45"
     const regex = /^(\d+)(h|H)?(\d+)?(m|M)?$/;
     const match = duration.match(regex);
 
     if (match) {
-        const hours = match[1] ? parseInt(match[1], 10) : 0;
-        const minutes = match[3] ? parseInt(match[3], 10) : 0;
-        return `PT${hours}H${minutes}M`;  // Retourne une durée ISO 8601, ex : PT1H30M
+        const hours = match[1] ? String(match[1]).padStart(2, '0') : '00';
+        const minutes = match[3] ? String(match[3]).padStart(2, '0') : '00';
+        return `PT${hours}H${minutes}M`;  // Toujours avec deux chiffres
     }
     return '';  // Retourne une chaîne vide si le format n'est pas valide
 }
@@ -20,8 +19,10 @@ async function searchMovie() {
     const actors = document.getElementById('actors').value;
     const directors = document.getElementById('directors').value;
 
-    const minDuration = document.getElementById('min-duration').value;
-    const maxDuration = document.getElementById('max-duration').value;
+    //const minDuration = document.getElementById('min-duration').value;
+    //const maxDuration = document.getElementById('max-duration').value;
+    const minDuration = 0;
+    const maxDuration = 0;
     
     // Conversion des durées en format ISO
     const minDurationISO = minDuration ? convertDurationToISO(minDuration) : '';
@@ -50,7 +51,7 @@ async function searchMovie() {
         if (data.length > 0) {
             movieDetailsDiv.innerHTML = data.map(movie => {
                 return `
-                    <div>
+                    <div class="resultsearch">
                         <h3>${movie.name}</h3>
                         <img src="${movie.image}" alt="${movie.name}" />
                         <p>${movie.genre.join(', ')}</p>
