@@ -4,15 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recherche de Films</title>
+    <link rel="stylesheet" href="../css/film.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #222;
-            color: #fff;
-            margin: 0;
-            padding: 20px;
-        }
         .search-container {
+            color: #fff;
             background: #333;
             padding: 20px;
             border-radius: 8px;
@@ -60,6 +55,7 @@
         }
         .results {
             margin-top: 30px;
+            color: #fff;
         }
         .movie {
             display: flex;
@@ -116,15 +112,17 @@
                 resultsDiv.innerHTML = '';
                 movies.forEach(movie => {
                     resultsDiv.innerHTML += `
-                        <a href="./film/${movie.id}" target="_blank">
+                        <a href="./film/${movie.id}">
                             <div class="movie">
-                                <img src="${movie.image}" alt="${movie.name}">
+                                <img src="${movie.image || '../resources/trailerz_pochette_basique.png'}" 
+                                    alt="${movie.name}" 
+                                    onerror="this.onerror=null;this.src='../resources/trailerz_pochette_basique.png';">
                             
                             <div class="movie-content">
                                 <h2>${movie.name}</h2>
                         </a>
                                 <p><strong>Genres:</strong> ${movie.genre.join(', ')}</p>
-                                <p><strong>Réalisateur:</strong> <a href="${movie.director.url}" target="_blank">${movie.director.name}</a></p>
+                                <p><strong>Réalisateur:</strong> <a href="${movie.director.url}">${movie.director.name}</a></p>
                                 <p><strong>Durée:</strong> ${movie.duration}</p>
                                 <p><strong>Note:</strong> ${movie.aggregateRating.ratingValue}/10 (${movie.aggregateRating.ratingCount} votes)</p>
                                 <p><strong>Date de publication:</strong> ${movie.datePublished}</p>
@@ -139,7 +137,42 @@
         }
     </script>
 </head>
+
 <body>
+
+    <!-- Barre de navigation -->
+    <header class="navigation-bar">
+
+        <!-- Logo -->
+        <div class="trailerz-logo">
+            <a href="../"><img src="../resources/Logo_Trailerz.png" alt="Trailerz Logo"></a>
+        </div>
+
+        <!-- Navigation principale -->
+        <nav class="movies-tabs">
+            <ul>
+                <li><a href="../derniers-films">Derniers Films</a></li>
+            </ul>
+        </nav>
+
+        <!-- Zone de recherche -->
+        <div class="research-area">
+            <a href="../search"><input type="text" placeholder="Rechercher un film/série"></a>
+            <button class="research-button" type="submit">
+                <a href="../search"><img src="../resources/Icone_Loupe.png" alt="Rechercher"></a>
+            </button>
+        </div>
+
+        <!-- Navigation secondaire -->
+        <nav class="personnal-tabs">
+            <ul>
+                <li><a href="../random">Random</a></li>
+                <li><a href="../">Jeux</a></li>
+            </ul>
+        </nav>
+
+    </header>
+
     <div class="search-container">
         <h1>Recherche de Films</h1>
         <input id="name" type="text" placeholder="Nom du film">

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Films Récents</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #333;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            margin-top: 20px;
+            width: 90%;
+            max-width: 800px;
+            background-color: #444;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .movie {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #555;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .movie img {
+            width: 80px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+        .movie-details {
+            flex-grow: 1;
+        }
+        .movie-details h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: white;
+            font-weight: bold;
+            
+        }
+        .movie-details p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            background-color: #ff6347;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .pagination button:disabled {
+            background-color: #888;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Derniers films sortis</h1>
+        <div id="movie-list"></div>
+        <div class="pagination">
+            <button id="prev-page" disabled>Précédent</button>
+            <span id="page-info"></span>
+            <button id="next-page">Suivant</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const moviesPerPage = 15;
+    
+        async function fetchMovies(page) {
+            try {
+                const response = await fetch(`/api/derniers-films?page=${page}`);
+                if (!response.ok) throw new Error('Erreur lors du chargement des films.');
+    
+                const data = await response.json();
+                displayMovies(data.movies);
+                updatePagination(data.currentPage, data.totalPages);
+            } catch (err) {
+                console.error(err);
+                document.getElementById('movie-list').innerHTML = '<p>Erreur lors du chargement des données.</p>';
+            }
+        }
+    
+        function displayMovies(movies) {
+        const movieList = document.getElementById('movie-list');
+        movieList.innerHTML = movies.map(movie => {
+            const releaseYear = movie.datePublished ? new Date(movie.datePublished).getFullYear() : 'Inconnue';
+            return `
+                <div class="movie">
+                    <img src="${movie.image || '../resources/trailerz_pochette_basique.png'}" 
+                        alt="${movie.name}" 
+                        onerror="this.onerror=null;this.src='../resources/trailerz_pochette_basique.png';">
+
+                    <div class="movie-details">
+                        <h2><a href="/film/${movie._id}" style="color: white;">${movie.name}</a></h2>
+                        <p><strong>Année de sortie :</strong> ${releaseYear}</p>
+                        <p><strong>Genre :</strong> ${movie.genre.join(', ') || 'Non spécifié'}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        }
+
+    
+        function updatePagination(current, total) {
+            const prevButton = document.getElementById('prev-page');
+            const nextButton = document.getElementById('next-page');
+            const pageInfo = document.getElementById('page-info');
+    
+            prevButton.disabled = current === 1;
+            nextButton.disabled = current === total;
+            pageInfo.textContent = `Page ${current} sur ${total}`;
+        }
+    
+        document.getElementById('prev-page').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchMovies(currentPage);
+            }
+        });
+    
+        document.getElementById('next-page').addEventListener('click', () => {
+            currentPage++;
+            fetchMovies(currentPage);
+        });
+    
+        // Charger la première page au démarrage
+        fetchMovies(currentPage);
+    </script>
+    
+</body>
+</html>
