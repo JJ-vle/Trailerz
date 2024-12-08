@@ -13,33 +13,81 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             margin-top: 20px;
+            text-align: center;
         }
         .search-container h1 {
             margin-bottom: 20px;
             text-align: center;
         }
-        .search-container input, .search-container select, .search-container button {
-            width: calc(100% - 20px);
-            padding: 10px;
+
+        .search-line input {
+            width: 50%;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.5rem;
+        }
+
+        .date-range {
+            display: flex;
+            justify-content: center;
+        }
+        .date-gauche{
+            margin-right: 20px;
+        }
+        .date-range p {
+            margin: 0 10px;
+        }
+        .date-range input {
+            width: 100%;
             margin: 10px 0;
             border: none;
             border-radius: 4px;
             font-size: 1rem;
         }
-        .search-container .genres {
-            max-height: 200px;
-            overflow-y: auto;
-            margin: 10px 0;
+
+        .genres {
+            max-width: 100%;
+            margin-top: 10px;
+        }
+
+        .genre-carousel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .genre-options {
+            display: flex;
+            gap: 20px;
+            overflow-x: scroll;
             padding: 10px;
             background: #444;
             border-radius: 4px;
         }
-        .search-container .genres label {
-            display: block;
-            margin-bottom: 5px;
+
+        .genre-options label {
             cursor: pointer;
+            white-space: nowrap;
         }
-        .search-container button {
+
+        .duration-range {
+            margin-top: 10px;
+            margin-bottom: 30px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .duration-range input {
+            width: 48%;
+        }
+
+        button {
             width: 100%;
             padding: 10px;
             background-color: #ff6347;
@@ -49,13 +97,16 @@
             color: white;
             cursor: pointer;
         }
-        .search-container button:hover {
+
+        button:hover {
             background-color: #e5533b;
         }
+
         .results {
             margin-top: 30px;
             color: #fff;
         }
+
         .movie {
             display: flex;
             gap: 20px;
@@ -65,23 +116,28 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
+
         .movie img {
             flex-shrink: 0;
             width: 150px;
             height: auto;
             border-radius: 8px;
         }
+
         .movie-content {
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
+
         .movie h2 {
             margin: 10px 0;
         }
+
         .movie p {
             margin: 5px 0;
         }
+
         .movie a {
             color: #ffffff;
             text-decoration: none;
@@ -141,84 +197,92 @@
 
     <!-- Barre de navigation -->
     <header class="navigation-bar">
-
-        <!-- Logo -->
         <div class="trailerz-logo">
             <a href="../"><img src="../resources/Logo_Trailerz.png" alt="Trailerz Logo"></a>
         </div>
-
-        <!-- Navigation principale -->
         <nav class="movies-tabs">
             <ul>
                 <li><a href="../derniers-films">Derniers Films</a></li>
             </ul>
         </nav>
-
-        <!-- Zone de recherche -->
         <div class="research-area">
             <a href="../search"><input type="text" placeholder="Rechercher un film/série"></a>
             <button class="research-button" type="submit">
                 <a href="../search"><img src="../resources/Icone_Loupe.png" alt="Rechercher"></a>
             </button>
         </div>
-
-        <!-- Navigation secondaire -->
         <nav class="personnal-tabs">
             <ul>
                 <li><a href="../random">Random</a></li>
                 <li><a href="../">Jeux</a></li>
             </ul>
         </nav>
-
     </header>
 
     <div class="search-container">
         <h1>Recherche de Films</h1>
-        <input id="name" type="text" placeholder="Nom du film">
-        <input id="startDate" type="date" placeholder="Date de début">
-        <input id="endDate" type="date" placeholder="Date de fin">
-        
-        <div class="genres">
-            <strong>Sélectionnez des genres :</strong><br>
-            <label><input type="checkbox" name="genre" value="Action"> Action</label>
-            <label><input type="checkbox" name="genre" value="Adult"> Adult</label>
-            <label><input type="checkbox" name="genre" value="Adventure"> Adventure</label>
-            <label><input type="checkbox" name="genre" value="Animation"> Animation</label>
-            <label><input type="checkbox" name="genre" value="Biography"> Biography</label>
-            <label><input type="checkbox" name="genre" value="Comedy"> Comedy</label>
-            <label><input type="checkbox" name="genre" value="Crime"> Crime</label>
-            <label><input type="checkbox" name="genre" value="Documentary"> Documentary</label>
-            <label><input type="checkbox" name="genre" value="Drama"> Drama</label>
-            <label><input type="checkbox" name="genre" value="Family"> Family</label>
-            <label><input type="checkbox" name="genre" value="Fantasy"> Fantasy</label>
-            <label><input type="checkbox" name="genre" value="Film-Noir"> Film-Noir</label>
-            <label><input type="checkbox" name="genre" value="Game-Show"> Game-Show</label>
-            <label><input type="checkbox" name="genre" value="History"> History</label>
-            <label><input type="checkbox" name="genre" value="Horror"> Horror</label>
-            <label><input type="checkbox" name="genre" value="Music"> Music</label>
-            <label><input type="checkbox" name="genre" value="Musical"> Musical</label>
-            <label><input type="checkbox" name="genre" value="Mystery"> Mystery</label>
-            <label><input type="checkbox" name="genre" value="News"> News</label>
-            <label><input type="checkbox" name="genre" value="Reality-TV"> Reality-TV</label>
-            <label><input type="checkbox" name="genre" value="Romance"> Romance</label>
-            <label><input type="checkbox" name="genre" value="Sci-Fi"> Sci-Fi</label>
-            <label><input type="checkbox" name="genre" value="Short"> Short</label>
-            <label><input type="checkbox" name="genre" value="Sport"> Sport</label>
-            <label><input type="checkbox" name="genre" value="Talk-Show"> Talk-Show</label>
-            <label><input type="checkbox" name="genre" value="Thriller"> Thriller</label>
-            <label><input type="checkbox" name="genre" value="War"> War</label>
-            <label><input type="checkbox" name="genre" value="Western"> Western</label>
+        <div class="search-line">
+            <input id="name" type="text" placeholder="Nom du film">
         </div>
-        
-        <input id="minDuration" type="text" placeholder="Durée minimale (ex: PT1H30M)">
-        <input id="maxDuration" type="text" placeholder="Durée maximale (ex: PT2H)">
+
+        <div class="date-range">
+            <div class="date-gauche">
+                <p>Daté entre</p>
+                <input id="startDate" type="date" placeholder="Date de début">
+            </div>
+            <div class="date-droite">
+                <p>Et</p>
+                <input id="endDate" type="date" placeholder="Date de fin">
+            </div>
+        </div>
+
+        <div class="genres">
+            <strong>Sélectionnez des genres :</strong>
+            <div class="genre-carousel">
+                <div class="genre-options">
+                    <label><input type="checkbox" name="genre" value="Action"> Action</label>
+                    <label><input type="checkbox" name="genre" value="Adult"> Adult</label>
+                    <label><input type="checkbox" name="genre" value="Adventure"> Adventure</label>
+                    <label><input type="checkbox" name="genre" value="Animation"> Animation</label>
+                    <label><input type="checkbox" name="genre" value="Biography"> Biography</label>
+                    <label><input type="checkbox" name="genre" value="Comedy"> Comedy</label>
+                    <label><input type="checkbox" name="genre" value="Crime"> Crime</label>
+                    <label><input type="checkbox" name="genre" value="Documentary"> Documentary</label>
+                    <label><input type="checkbox" name="genre" value="Drama"> Drama</label>
+                    <label><input type="checkbox" name="genre" value="Family"> Family</label>
+                    <label><input type="checkbox" name="genre" value="Fantasy"> Fantasy</label>
+                    <label><input type="checkbox" name="genre" value="Film-Noir"> Film-Noir</label>
+                    <label><input type="checkbox" name="genre" value="Game-Show"> Game-Show</label>
+                    <label><input type="checkbox" name="genre" value="History"> History</label>
+                    <label><input type="checkbox" name="genre" value="Horror"> Horror</label>
+                    <label><input type="checkbox" name="genre" value="Music"> Music</label>
+                    <label><input type="checkbox" name="genre" value="Musical"> Musical</label>
+                    <label><input type="checkbox" name="genre" value="Mystery"> Mystery</label>
+                    <label><input type="checkbox" name="genre" value="News"> News</label>
+                    <label><input type="checkbox" name="genre" value="Reality-TV"> Reality-TV</label>
+                    <label><input type="checkbox" name="genre" value="Romance"> Romance</label>
+                    <label><input type="checkbox" name="genre" value="Sci-Fi"> Sci-Fi</label>
+                    <label><input type="checkbox" name="genre" value="Short"> Short</label>
+                    <label><input type="checkbox" name="genre" value="Sport"> Sport</label>
+                    <label><input type="checkbox" name="genre" value="Talk-Show"> Talk-Show</label>
+                    <label><input type="checkbox" name="genre" value="Thriller"> Thriller</label>
+                    <label><input type="checkbox" name="genre" value="War"> War</label>
+                    <label><input type="checkbox" name="genre" value="Western"> Western</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="duration-range">
+            <input id="minDuration" type="text" placeholder="Durée minimale (ex: PT1H30M)">
+            <input id="maxDuration" type="text" placeholder="Durée maximale (ex: PT2H)">
+        </div>
+
         <button onclick="searchMovies()">Rechercher</button>
     </div>
+
     <div id="results" class="results"></div>
 
-
-     <!-- Footer -->
-     <footer class="footer">
+    <footer class="footer">
         <div class="footer-container">
             <img src="../resources/Logo_Trailerz.png" alt="">
             <div class="footer-links">
@@ -230,5 +294,6 @@
             <p>Copyright 2024.</p>
         </div>
     </footer>
+
 </body>
 </html>

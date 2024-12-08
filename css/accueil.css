@@ -1,4 +1,10 @@
 /* CORPS DU DOCUMENT */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+*{
+    font-family: 'Open Sans', sans-serif;
+}
+
 body {
     justify-content: center;
     background-color: #1a1a1a;
@@ -11,7 +17,6 @@ body {
 /* TITRES DES CATEGORIES */
 h1,p, a {
     color: white;
-    font-family: 'Roboto', sans-serif;
 }
 
 .highlighted-title {
@@ -38,6 +43,7 @@ h1,p, a {
     justify-content: space-between;
     align-items: center;
     padding: 40px;
+    font-weight: bold;
     box-sizing: border-box;
     overflow: hidden;
     max-width: auto;
@@ -83,7 +89,7 @@ h1,p, a {
 .movies-tabs a, .personnal-tabs a {
     text-decoration: none;
     color: white;
-    font-size: 35px;
+    font-size: 30px;
 }
 
 .movies-tabs a:hover, .personnal-tabs a:hover {
