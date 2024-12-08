@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = (app, mongoose, Movie) => {
-    // Fonction pour convertir la durée ISO 8601 en minutes
+    // conversion de la durée en vraie durée
     const durationToMinutes = (duration) => {
         const regex = /^PT(\d+H)?(\d+M)?$/;
         const match = duration.match(regex);
@@ -18,7 +18,7 @@ module.exports = (app, mongoose, Movie) => {
         return hours * 60 + minutes;
     };
 
-    // Route pour rechercher des films
+    // route de l'api
     app.get('/api/search-movie', async (req, res) => {
         const { 
             name, 
@@ -33,34 +33,34 @@ module.exports = (app, mongoose, Movie) => {
 
         let query = {};
 
-        // Recherche par nom
+        // recherche par noms
         if (name) {
-            query.name = { $regex: name, $options: 'i' }; // Insensible à la casse
+            query.name = { $regex: name, $options: 'i' }; //on enlève la bonne casse obligatoire
         }
 
-        // Recherche par date
+        // reccherche par date
         if (startDate || endDate) {
             query.datePublished = {};
             if (startDate) query.datePublished.$gte = startDate;
             if (endDate) query.datePublished.$lte = endDate;
         }
 
-        // Recherche par genres
+        // recherche par genre
         if (genres) {
-            query.genre = { $in: genres.split(',') }; // Plusieurs genres séparés par des virgules
+            query.genre = { $in: genres.split(',') }; //separation genres par ;
         }
 
-        // Recherche par acteur
+        // recherche par acteur
         if (actors) {
-            query['actor.name'] = { $regex: actors, $options: 'i' }; // Insensible à la casse
+            query['actor.name'] = { $regex: actors, $options: 'i' }; // retrait cassse
         }
 
-        // Recherche par réalisateur
+        // recherche par réalisateur
         if (directors) {
-            query['director.name'] = { $regex: directors, $options: 'i' }; // Insensible à la casse
+            query['director.name'] = { $regex: directors, $options: 'i' }; // retrai casse
         }
 
-        // Recherche par durée
+        // recherche par durée
         if (minDuration || maxDuration) {
             const minMinutes = minDuration ? durationToMinutes(minDuration) : 0;
             const maxMinutes = maxDuration ? durationToMinutes(maxDuration) : Infinity;
@@ -77,10 +77,10 @@ module.exports = (app, mongoose, Movie) => {
                 return res.status(404).send({ message: 'Aucun film trouvé avec ces critères.' });
             }
 
-            // Formater la réponse
+            // formatage de la réponse en json
             const formattedMovies = movies.map((movie) => ({
                 name: movie.name || 'Titre inconnu',
-                image: movie.image || 'https://via.placeholder.com/200x300?text=Image+indisponible',
+                image: movie.image || '../resouces/trailers_pochette_basique.png',
                 genre: movie.genre || ['Genre inconnu'],
                 director: movie.director ? {
                     name: movie.director.name || 'Réalisateur inconnu',
@@ -92,10 +92,11 @@ module.exports = (app, mongoose, Movie) => {
                 } : { ratingValue: 'Non noté', ratingCount: 'Aucun vote' },
                 duration: movie.duration ? `${durationToMinutes(movie.duration)} minutes` : 'Durée inconnue',
                 datePublished: movie.datePublished || 'Date inconnue',
-                id: movie._id // Ajout de l'ID
+                id: movie._id
             }));
             
 
+            //envoi du json
             res.json(formattedMovies);
         } catch (err) {
             console.error('Erreur lors de la recherche des films:', err);

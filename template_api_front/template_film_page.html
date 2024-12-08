@@ -7,21 +7,85 @@
         
         <!-- CSS ajouté -->
         <style>
+           html {
+                position: relative;
+                height: 100%;
+            }
+
+            html::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: 
+                    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                    url('{{image}}'), url('../resources/Logo_Trailerz.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                filter: blur(8px);
+                z-index: -1;
+            }
+            
 
             .container {
+
+                margin-top: -5px;
                 border-radius: 5px;
                 margin: 0x auto;
                 padding: 0px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                background-color: rgba(29, 29, 29, 0.907);
             }
+
+
+                        
             .container h1 {
-                font-size: 2.5rem;
-                margin-bottom: 10px;
-                color: #ffffff;
-                background-color: #6f6f6f;
-                padding: 10px;
+            position: relative;
+            padding: 5px;
+            border: 0;
+            margin: .6em;
+            background: transparent;
+            font-size: 40px;
+            color: transparent;
+            font-weight: bold;
+            text-align: center;
+            z-index: 1;
+
+            &::after {
+                content: '{{name}}';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1;
+                color: white;
+                font-size: 40px;
+                font-weight: bold;
                 text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
+            }
+
+            .container h1::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background: #6d0000;
+                transform: skew(-10deg);
+                z-index: 0;
+            }
+
+
             .container img {
                 margin-left: 20px;
                 margin-top: 25px;
@@ -40,14 +104,14 @@
             }
             .detail-item {
                 width: 45%;
-                background-color: #f9f9f9;
+                background-color: #f9f9f9d6;
                 padding: 15px;
                 border-radius: 8px;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             }
             .detail-item h3 {
                 margin-top: 0;
-                color: #007bff;
+                color: #af0000;
             }
             .detail-item p {
                 margin: 10px 0;
@@ -58,7 +122,7 @@
             }
             .container a {
                 text-decoration: none;
-                color: #007bff;
+                color: #9d0000;
                 font-size: 1.1rem;
                 display: inline-block;
                 margin-top: 20px;
@@ -76,7 +140,18 @@
                 backdrop-filter: blur(5px);
                 padding: 15px;
                 border-radius: 8px;
-                box-shadow: inset 0 0 500px 20px rgb(0, 0, 0);
+                box-shadow: inset 30px 50px 500px 20px rgb(0, 0, 0);
+            }
+
+            .player_video{
+                display: flex;
+                justify-content: center;
+            }
+            .player_video video{
+                width: 90%;
+                height: auto;
+                border-radius: 8px;
+                box-shadow: 5px 5px 50px 2px rgb(0, 0, 0);
             }
         </style>
 
@@ -127,6 +202,18 @@
             <br>
     
             <h1>{{name}}</h1>
+
+            <div class="player_video">
+                <iframe
+                    width="90%"
+                    height="610px"
+                    src="{{ytbTrailer}}"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
     
             <br>
             <div class="movie-details">
@@ -176,6 +263,7 @@
                     <p><a href="{{trailerUrl}}" target="_blank">Voir la bande-annonce</a></p>
                 </div>
             </div>
+            <br><br>
         </div>
 
         <!-- Script -->

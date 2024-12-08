@@ -201,7 +201,6 @@ app.get('/derniers-films', (req, res) =>{
     res.sendFile(path.join(__dirname, 'template_api_front/template_films_recents.html'));
 });
 
-// Page admin
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'html/admin.html'));
 });

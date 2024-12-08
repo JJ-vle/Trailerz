@@ -26,7 +26,7 @@ module.exports = (app, mongoose, Movie) => {
         }
 
         try {
-            // Sélectionner un film aléatoire parmi les catégories spécifiées
+            // selection film aléatoire en fonction de la cat choisie
             const movie = await Movie.aggregate([
                 { $match: { genre: { $in: categories } } },
                 { $sample: { size: 1 } }
@@ -38,11 +38,11 @@ module.exports = (app, mongoose, Movie) => {
 
             const selectedMovie = movie[0];
 
-            // Formatage de la réponse au format JSON
+            // reponse en json
             const response = {
                 id: selectedMovie._id,
                 name: selectedMovie.name || 'Film non trouvé',
-                image: selectedMovie.image || 'https://via.placeholder.com/200x300?text=Image+indisponible',
+                image: selectedMovie.image || '../resources/trailerz_pochette_basique.png',
                 genre: selectedMovie.genre || ['Rien à afficher'],
                 director: selectedMovie.director ? {
                     name: selectedMovie.director.name || 'Réalisateur inconnu',
@@ -55,7 +55,7 @@ module.exports = (app, mongoose, Movie) => {
             };
             
 
-            // Envoi de la réponse sous forme de JSON
+            // envoi de la réponse
             res.json(response);
         } catch (err) {
             console.error('Erreur:', err);
@@ -63,7 +63,7 @@ module.exports = (app, mongoose, Movie) => {
         }
     });
 
-    // Ajoute l'URL IMDb devant chaque lien clicable
+    // URL généré devant chaque lien de la bd
     const addImdbUrl = (url) => {
         return url ? `https://www.imdb.com${url}` : '#';
     };

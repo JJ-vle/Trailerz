@@ -4,15 +4,15 @@ const path = require('path');
 module.exports = (app, mongoose, Movie) => {
 
     app.get('/api/derniers-films', async (req, res) => {
-        const page = parseInt(req.query.page) || 1; // Page actuelle
-        const limit = 15; // Limite de films par page
-        const skip = (page - 1) * limit; // Calcul de l'offset
+        const page = parseInt(req.query.page) || 1; //page actuelle
+        const limit = 15; //limite affichage par page
+        const skip = (page - 1) * limit;
 
         try {
-            // Compter le nombre total de films
+            //compte le nb total de films
             const totalMovies = await Movie.countDocuments();
 
-            // Vérifier si des films existent
+            //verif si film existe dans la bd
             if (totalMovies === 0) {
                 return res.status(404).json({
                     message: "Aucun film trouvé.",
@@ -23,17 +23,17 @@ module.exports = (app, mongoose, Movie) => {
                 });
             }
 
-            // Récupérer les films triés par date de sortie descendante
+            //recup film triés par date
             const movies = await Movie.find({})
                 .sort({ datePublished: -1 })
                 .skip(skip)
                 .limit(limit)
                 .exec();
 
-            // Calcul des pages totales
+            //calcul total pages
             const totalPages = Math.ceil(totalMovies / limit);
 
-            // Retourner la réponse JSON
+            //reponse JSON
             res.json({
                 movies,
                 totalMovies,

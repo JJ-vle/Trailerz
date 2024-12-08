@@ -36,6 +36,8 @@ header h1, header p, header a {
 
 /* BARRE DE NAVIGATION */
 .navigation-bar {
+    z-index: 100;
+    position: sticky;
     display: flex;
     justify-content: space-between;
     align-items: center;

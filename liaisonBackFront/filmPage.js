@@ -1,9 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
+const cheerio = require('cheerio');
+const { Client } = require('youtubei');
 
 module.exports = (app, mongoose, Movie) => {
-
-    // formatage de la durée du film
+    // transformation durée de base en vraie durée du film
     const formatDuration = (duration) => {
         const regex = /^PT(\d+H)?(\d+M)?$/;
         const matches = duration.match(regex);
@@ -22,7 +24,7 @@ module.exports = (app, mongoose, Movie) => {
         return `${hours > 0 ? hours + 'h' : ''}${minutes > 0 ? minutes : ''}`;
     };
 
-    // Génère les étoiles pour la note
+    // étoiles de note
     const generateStars = (ratingValue) => {
         const totalStars = 10;
         const filledStars = Math.round(ratingValue);
@@ -37,10 +39,36 @@ module.exports = (app, mongoose, Movie) => {
         return stars;
     };
 
-    // Ajoute l'URL IMDb devant chaque lien clicable
+    // ajout URL imdb avant tous les liens de la BD
     const addImdbUrl = (url) => {
         return url ? `https://www.imdb.com${url}` : '#';
     };
+
+    // recherche du trailer sur ytb
+    const fetchYouTubeTrailerUrl = async (movieName) => {
+        try {
+            const youtube = new Client();
+            const searchQuery = `${movieName} Trailer VO`; //requete sur ytb
+            console.log("Recherche pour :", searchQuery);
+            const searchResults = await youtube.search(searchQuery);
+    
+            if (searchResults && searchResults.items && searchResults.items.length > 0) {
+                const firstVideo = searchResults.items[0];
+                if (firstVideo.id) {
+                    const embedUrl = `https://www.youtube.com/embed/${firstVideo.id}`; //url trouvé
+                    console.log("URL du trailer trouvé :", embedUrl);
+                    return embedUrl;
+                }
+            }
+            console.log("Aucun résultat trouvé.");
+            return null;
+        } catch (error) {
+            console.error('Erreur lors de la recherche sur YouTube:', error.message);
+            return null;
+        }
+    };
+    
+    
 
     // APPI PRINCIPALE
     app.get('/film/:id', async (req, res) => {
@@ -51,6 +79,9 @@ module.exports = (app, mongoose, Movie) => {
             if (!movie) {
                 return res.status(404).send('Film non trouvé');
             }
+
+            // recuperation url trailer ytb
+            const ytTrailerUrl = movie.name ? await fetchYouTubeTrailerUrl(movie.name) : null;
 
             // lecteur du template html
             const filePath = path.join(__dirname, '../template_api_front/template_film_page.html');
@@ -86,9 +117,13 @@ module.exports = (app, mongoose, Movie) => {
 
             htmlContent = htmlContent.replace(/{{keywords}}/g, movie.keywords && movie.keywords.length > 0 ? movie.keywords.join(', ') : 'Rien à afficher');
             htmlContent = htmlContent.replace(/{{budget}}/g, movie.budget || 'Rien à afficher');
+
+            htmlContent = htmlContent.replace(/{{ytbTrailer}}/g, ytTrailerUrl || '#');
+
             htmlContent = htmlContent.replace(/{{trailerUrl}}/g, addImdbUrl(movie.trailer ? movie.trailer.embedUrl : '#'));
 
-            // Transmission du contenu html
+
+            //on envoie le contenu
             res.send(htmlContent);
 
         } catch (err) {
