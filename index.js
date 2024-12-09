@@ -7,8 +7,12 @@ const fs = require('fs');
 const app = express();
 const PORT = 2030;
 
+app.use(express.static('public'));
+
+
 // Connexion à MongoDB
-mongoose.connect('mongodb://localhost:27017/trailerz', {
+//mongoose.connect('mongodb://localhost:27017/trailerz', {
+mongoose.connect('mongodb://127.0.0.1:27017/trailerz', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
@@ -180,8 +184,6 @@ fs.readdirSync(fonctionnalitesDir).forEach((file) => {
 });
 
 
-
-
 // Middleware pour servir les fichiers HTML
 app.use(express.static(path.join(__dirname, './')));
 
@@ -204,8 +206,6 @@ app.get('/derniers-films', (req, res) =>{
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'html/admin.html'));
 });
-
-
 
 // Démarrage du serveur
 app.listen(PORT, () => {

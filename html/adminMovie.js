@@ -1,45 +1,44 @@
+
+
 // Fonction pour ajouter un film
 async function addMovie(event) {
     event.preventDefault(); // Empêche l'envoi du formulaire classique
+
+    console.log("ouii");
 
     // Récupération des valeurs des champs du formulaire
     const movieName = document.getElementById('add-name').value;
     const releaseDate = document.getElementById('add-date').value;
     const actors = document.getElementById('add-actors').value.split(',').map(actor => actor.trim());
-    const director = document.getElementById('add-director').value;
+    const directors = document.getElementById('add-director').value.split(',').map(director => director.trim());
     const genres = Array.from(document.querySelectorAll('#add-genres input:checked')).map(checkbox => checkbox.value);
     const duration = document.getElementById('add-duration').value;
     const url = document.getElementById('add-url').value;
     const description = document.getElementById('add-description').value;
 
-    console.log({
+    // Vérification de la durée
+    const formattedDuration = `PT${Math.floor(duration / 60)}H${duration % 60}M`; // Conversion en format ISO
+
+    // Création de l'objet à envoyer
+    const movieData = {
         name: movieName,
         datePublished: releaseDate,
-        actor: actors.map(name => ({ name })),
-        //director: director,
-        director: director.map(name => ({ name })),
+        actor: actors.map(name => ({ '@type': 'Person', name })),
+        director: directors.map(name => ({ '@type': 'Person', name })),
         genre: genres,
-        duration: `PT${Math.floor(duration / 60)}H${duration % 60}M`, // Conversion en format ISO
+        duration: formattedDuration,
         url: url,
-        description: description 
-    });
+        description: description
+    };
+
+    console.log(movieData); // Vérifie que l'objet est correct
 
     const response = await fetch('/api/add-movie', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            name: movieName,
-            datePublished: releaseDate,
-            actor: actors.map(name => ({ name })),
-            //director: director, 
-            director: director.map(name => ({ name })),
-            genre: genres,
-            duration: `PT${Math.floor(duration / 60)}H${duration % 60}M`,
-            url: url,
-            description: description
-        })
+        body: JSON.stringify(movieData)  // Envoie l'objet film
     });
 
     const result = await response.json();
@@ -51,7 +50,7 @@ async function addMovie(event) {
 }
 
 
-
+/*
 // Fonction pour modifier un film
 async function updateMovie(event) {
     event.preventDefault();
@@ -111,8 +110,9 @@ async function deleteMovie(event) {
         alert(`Erreur lors de la suppression du film : ${result.message}`);
     }
 }
-
+*/
 // Ajout des écouteurs d'événements
 document.getElementById('add-movie-form').addEventListener('submit', addMovie);
-document.getElementById('update-movie-form').addEventListener('submit', updateMovie);
-document.getElementById('delete-movie-form').addEventListener('submit', deleteMovie);
+
+//document.getElementById('update-movie-form').addEventListener('submit', updateMovie);
+//document.getElementById('delete-movie-form').addEventListener('submit', deleteMovie);
