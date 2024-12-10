@@ -49,8 +49,6 @@ async function addMovie(event) {
     }
 }
 
-
-/*
 // Fonction pour modifier un film
 async function updateMovie(event) {
     event.preventDefault();
@@ -59,26 +57,30 @@ async function updateMovie(event) {
     const movieName = document.getElementById('update-name').value;
     const releaseDate = document.getElementById('update-date').value;
     const actors = document.getElementById('update-actors').value.split(',').map(actor => actor.trim());
-    const director = document.getElementById('update-director').value;
+    const directors = document.getElementById('update-director').value.split(',').map(director => director.trim());
     const genres = Array.from(document.querySelectorAll('#update-genres input:checked')).map(checkbox => checkbox.value);
     const duration = document.getElementById('update-duration').value;
     const url = document.getElementById('update-url').value;
 
+    // Préparer l'objet à envoyer
+    const body = {
+        id: movieId,
+        ...(movieName && { name: movieName }),
+        ...(releaseDate && { datePublished: releaseDate }),
+        ...(actors.length > 0 && { actor: actors.map(name => ({ name })) }),
+        ...(directors.length > 0 && { director: directors.map(name => ({ name })) }),
+        ...(genres.length > 0 && { genre: genres }),
+        ...(duration && { duration: `PT${Math.floor(duration / 60)}H${duration % 60}M` }),
+        ...(url && { url })
+    };
+
+    // Envoyer la requête PUT
     const response = await fetch('/api/update-movie', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            id: movieId,
-            name: movieName,
-            datePublished: releaseDate,
-            actor: actors.map(name => ({ name })),
-            director: { name: director },
-            genre: genres,
-            duration: `PT${Math.floor(duration / 60)}H${duration % 60}M`, 
-            url: url
-        })
+        body: JSON.stringify(body)
     });
 
     const result = await response.json();
@@ -88,6 +90,7 @@ async function updateMovie(event) {
         alert(`Erreur lors de la mise à jour du film : ${result.message}`);
     }
 }
+
 
 // Fonction pour supprimer un film
 async function deleteMovie(event) {
@@ -110,9 +113,8 @@ async function deleteMovie(event) {
         alert(`Erreur lors de la suppression du film : ${result.message}`);
     }
 }
-*/
+
 // Ajout des écouteurs d'événements
 document.getElementById('add-movie-form').addEventListener('submit', addMovie);
-
-//document.getElementById('update-movie-form').addEventListener('submit', updateMovie);
-//document.getElementById('delete-movie-form').addEventListener('submit', deleteMovie);
+document.getElementById('update-movie-form').addEventListener('submit', updateMovie);
+document.getElementById('delete-movie-form').addEventListener('submit', deleteMovie);

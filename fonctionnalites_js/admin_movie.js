@@ -3,7 +3,6 @@ const Movie = require('../models/movie');
 const mongoose = require('mongoose');
 
 module.exports = (app) => {
-    //app.use(express.json()); // Assure-toi que le middleware JSON est utilisé ici
 
     // Route pour ajouter un film
     app.post('/api/add-movie', async (req, res) => {
@@ -40,42 +39,30 @@ module.exports = (app) => {
         }
     });
     
-
-
-    
-/*
     // Route de mise à jour de film
     app.put('/api/update-movie', async (req, res) => {
-        const { id, name, datePublished, actor, director, genre, duration, url, description } = req.body;
-
-        // Vérification si l'ID du film est présent
+        const { id, ...updates } = req.body;
+    
+        // Vérification si l'ID est fourni
         if (!id) {
             return res.status(400).json({ message: 'L\'ID du film est requis.' });
         }
-
+    
         try {
-            // Mise à jour du film par son ID
-            const updatedMovie = await Movie.findByIdAndUpdate(id, {
-                name,
-                datePublished,
-                actor,
-                director,
-                genre,
-                duration,
-                url,
-                description
-            }, { new: true });
-
+            // Mise à jour du film avec les données fournies
+            const updatedMovie = await Movie.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
+    
             if (!updatedMovie) {
                 return res.status(404).json({ message: 'Film non trouvé' });
             }
-
+    
             res.json({ message: 'Film mis à jour avec succès', updatedMovie });
         } catch (error) {
             console.error('Erreur lors de la mise à jour du film', error);
             res.status(500).json({ message: 'Erreur serveur lors de la mise à jour du film', error });
         }
     });
+
 
     // Route de suppression de film
     app.delete('/api/delete-movie', async (req, res) => {
@@ -97,5 +84,5 @@ module.exports = (app) => {
             console.error('Erreur lors de la suppression du film', error);
             res.status(500).json({ message: 'Erreur serveur lors de la suppression du film', error });
         }
-    });*/
+    });
 };
