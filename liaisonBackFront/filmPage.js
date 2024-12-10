@@ -105,9 +105,10 @@ module.exports = (app, mongoose, Movie) => {
                 <p><strong>${actor.name || 'Acteur inconnu'}</strong> - <a target="_blank" href="${addImdbUrl(actor.url)}">Voir profil</a></p>
             `).join('') : '<p>Rien à afficher</p>');
 
-            htmlContent = htmlContent.replace(/{{directors}}/g, movie.director ? `
-                <p><strong>${movie.director.name}</strong> - <a target="_blank" href="${addImdbUrl(movie.director.url)}">Voir profil</a></p>
-            ` : '<p>Rien à afficher</p>');
+            htmlContent = htmlContent.replace(/{{directors}}/g, movie.director && movie.director.length > 0 ? movie.director.map(director => `
+                <p><strong>${director.name || 'Réalisateur inconnu'}</strong> - <a target="_blank" href="${addImdbUrl(director.url)}">Voir profil</a></p>
+            `).join('') : '<p>Rien à afficher</p>');
+            
 
             htmlContent = htmlContent.replace(/{{creators}}/g, movie.creator && movie.creator.some(creator => creator.name) ? `
                 ${movie.creator.map(creator => creator.name ? `

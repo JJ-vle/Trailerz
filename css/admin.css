@@ -1,0 +1,173 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h1, h2 {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin-top: 20px;
+    font-size: 2.5em;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+section {
+    background: #333;
+    margin: 20px auto;
+    color:white;
+    padding: 20px;
+    border-radius: 10px;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+input, textarea, button {
+    font-size: 1em;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+button {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+    padding: 10px;
+    font-size: 1em;
+    width: auto;
+    align-self: flex-start;
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+
+button.remove-actor,
+button.remove-directors,button.remove-director,
+button.remove-creators,button.remove-creator {
+    background-color: #d9534f;
+    margin-top: 0;
+    padding: 5px 10px;
+    font-size: 0.9em;
+    width: auto;
+}
+
+button.remove-actor:hover,
+button.remove-directors:hover,button.remove-director:hover,
+button.remove-creators:hover,button.remove-creator:hover {
+    background-color: #c9302c;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+#add-actors .actor-input, 
+#add-directors .director-input, 
+#add-creators .creator-input, 
+#update-actors .actor-input, 
+#update-directors .director-input, 
+#update-creators .creator-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#add-actors .actor-input input,
+#add-directors .director-input input,
+#add-creators .creator-input input,
+#update-actors .actor-input input,
+#update-directors .director-input input,
+#update-creators .creator-input input {
+    flex: 1;
+}
+
+.categories {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: black;
+}
+
+.category {
+    flex-shrink: 0;
+}
+
+.category input {
+    margin-right: 5px;
+}
+
+#add-actor-btn,
+#add-director-btn,
+#add-creator-btn,
+#update-actor-btn,
+#update-director-btn,
+#update-creator-btn {
+    background-color: #0275d8;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 1em;
+    width: auto;
+    align-self: flex-start;
+    margin-top: 10px;
+}
+
+#add-actor-btn:hover,
+#add-director-btn:hover,
+#add-creator-btn:hover,
+#update-actor-btn:hover,
+#update-director-btn:hover,
+#update-creator-btn:hover {
+    background-color: #025aa5;
+}
+
+
+.bouton-sub{
+    text-align: center;
+    margin: auto;
+    padding: 8px;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: #9d1b16;
+    margin-top: 20px;
+}
+.bouton-sub:hover{
+    background-color: #6c0f0b;
+}

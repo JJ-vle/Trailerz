@@ -4,25 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devine le Film</title>
+    <link rel="stylesheet" href="../css/film.css">
     <style>
         #suggestions { list-style-type: none; padding: 0; }
         .suggestion-item { cursor: pointer; }
+        .jeu-content { 
+            padding-top: 10px;
+            padding-bottom: 20px;
+            background-color: #333;
+            margin-top: 20px;
+            border-radius: 8px;
+            color: white;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+
+        }
+        .thumbnailContainer{
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <h1>Devine le Film</h1>
-
-    <div id="thumbnailContainer">
-        <img id="movieThumbnail" src="" alt="Film Thumbnail" width="200" style="display: none;">
-        <input type="hidden" id="movieId">
+   <!-- Barre de navigation -->
+   <header class="navigation-bar">
+    <div class="trailerz-logo">
+        <a href="../"><img src="../resources/Logo_Trailerz.png" alt="Trailerz Logo"></a>
     </div>
+    <nav class="movies-tabs">
+        <ul>
+            <li><a href="../derniers-films">Films</a></li>
+            <li><a href="../search">Recherche</a></li>
+            <li><a href="../random">Random</a></li>
+            <li><a href="../devine">Jeux</a></li>
+            <li><a href="../admin">🔑</a></li>
+        </ul>
+    </nav>
+   
+</header>
 
-    <h2>Entrez le nom du film :</h2>
-    <input type="text" id="movieInput" placeholder="Tapez un nom de film...">
-    <ul id="suggestions"></ul>
 
-    <p id="message"></p> <!-- Message de retour pour le jeu -->
+    <div class="jeu-content">
+        <h1>Devine le Film</h1>
 
-    <script src="/fonctionnalites_js/devinelefilm.js"></script>
+        <div id="thumbnailContainer">
+            <img id="movieThumbnail" src="" alt="Film Thumbnail" width="200" style="display: none;">
+            <input type="hidden" id="movieId">
+        </div>
+    
+        <h2>Entrez le nom du film :</h2>
+        <input type="text" id="movieInput" placeholder="Tapez un nom de film...">
+        <ul id="suggestions"></ul>
+    
+        <p id="message"></p> <!-- Message de retour pour le jeu -->
+    
+        <script src="/fonctionnalites_js/devinelefilm.js"></script>
+    </div>
+    
+
+
+
+    <footer class="footer">
+        <div class="footer-container">
+            <img src="../resources/Logo_Trailerz.png" alt="">
+        </div>
+    </footer>
 </body>
 </html>

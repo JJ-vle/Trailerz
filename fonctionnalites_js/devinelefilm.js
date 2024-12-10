@@ -20,11 +20,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Afficher l'image du film
                 const movieImage = document.getElementById('movieThumbnail');
                 movieImage.src = currentThumbnailUrl;
-                movieImage.style.display = 'block';
+                movieImage.style.display = 'inline-block';
+                movieImage.style.width = '300px';
+                movieImage.style.textAlign = 'center';
     
                 document.getElementById('movieId').value = currentMovieId;
                 document.getElementById('movieInput').value = '';
-                document.getElementById('message').textContent = "À vous de jouer, devinez le film !";
+                const textebase=document.getElementById('message');
+                textebase.textContent="À vous de jouer, devinez le film !";
+                textebase.style.color="white";
             })
             .catch(error => {
                 console.error("Erreur lors de la récupération du film :", error);
@@ -74,7 +78,9 @@ document.addEventListener("DOMContentLoaded", function() {
     
         // Comparer la réponse de l'utilisateur avec le nom du film stocké
         if (userAnswer === currentMovieName.toLowerCase()) {
-            document.getElementById('message').textContent = `Bien joué ! C'était "${currentMovieName}"`;
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = `Bien joué ! C'était "${currentMovieName}"`;
+            messageElement.style.color = "green";
     
             // Si la réponse est correcte, charger un nouveau film après 2 secondes
             setTimeout(() => {
@@ -82,7 +88,9 @@ document.addEventListener("DOMContentLoaded", function() {
             }, 2000);
         } else {
             // Si la réponse est incorrecte
-            document.getElementById('message').textContent = "Mauvaise réponse, essayez encore !";
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = "Mauvaise réponse, essayez encore !";
+            messageElement.style.color = "red";
         }
     }
     

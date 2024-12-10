@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Film Aléatoire par Catégorie</title>
+    <link rel="stylesheet" href="../css/film.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #333;
+        .main-content {
             color: white;
             margin: 0;
             padding: 0;
@@ -17,41 +16,46 @@
 
         }
         .container {
-            background-color: black;
+            background-color: #333;
+            margin-top: 20px;
             border-radius: 8px;
             padding: 20px;
-            width: 80%;
-            max-width: 600px;
+            width: 100%;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
-        h1 {
+        .main-content button{
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        .main-content h1 {
             font-size: 2rem;
             margin-bottom: 20px;
             color: #fff;
         }
-        img {
+        .main-content img {
             width: 200px;
             height: 300px;
             object-fit: cover;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
-        p {
+        .main-content p {
             font-size: 1.2rem;
             margin: 10px 0;
         }
-        a {
+        .main-content a {
             color: #ff6347;
             text-decoration: none;
             font-weight: bold;
         }
-        .footer {
-            position: absolute;
-            bottom: 10px;
-            font-size: 0.9rem;
-            color: #888;
-        }
+       
         .categories {
             display: flex;
             flex-wrap: wrap;
@@ -82,12 +86,12 @@
                 const movie = await response.json();
 
                 document.getElementById('movie-details').innerHTML = `
-                    <a href="./film/${movie.id}" target="_blank">
+                    <a href="./film/${movie.id}">
                     <h1>${movie.name}</h1>
                     <img src="${movie.image}" alt="${movie.name}">
                     </a>
                     <p><strong>Genre:</strong> ${movie.genre.join(', ')}</p>
-                    <p><strong>Réalisateur:</strong> <a href="${movie.director.url}" target="_blank">${movie.director.name}</a></p>
+                    <p><strong>Réalisateur:</strong> <a href="${movie.director.url}">${movie.director.name}</a></p>
                     <p><strong>Note:</strong> ${movie.aggregateRating.ratingValue}/10 (${movie.aggregateRating.ratingCount} votes)</p>
                 `;
             } catch (err) {
@@ -98,6 +102,24 @@
     </script>
 </head>
 <body>
+    <!-- Barre de navigation -->
+    <header class="navigation-bar">
+        <div class="trailerz-logo">
+            <a href="../"><img src="../resources/Logo_Trailerz.png" alt="Trailerz Logo"></a>
+        </div>
+        <nav class="movies-tabs">
+            <ul>
+                <li><a href="../derniers-films">Films</a></li>
+                <li><a href="../search">Recherche</a></li>
+                <li><a href="../random">Random</a></li>
+                <li><a href="../devine">Jeux</a></li>
+                <li><a href="../admin">🔑</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-content">
+
     <div class="container">
         <h1>Film Aléatoire par Catégorie</h1>
 
@@ -222,6 +244,13 @@
 
         <div id="movie-details"></div>
     </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <img src="../resources/Logo_Trailerz.png" alt="">
+        </div>
+    </footer>
 
 </body>
 </html>
