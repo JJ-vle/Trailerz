@@ -209,7 +209,7 @@ app.get('/derniers-films', (req, res) =>{
 });
 
 app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'html/admin.html'));
+    res.sendFile(path.join(__dirname, 'template_api_front/admin.html'));
 });
 
 // Démarrage du serveur
