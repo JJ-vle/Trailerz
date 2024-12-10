@@ -24,16 +24,19 @@ const movieSchema = new mongoose.Schema({
         url: String,
         name: String,
     }],
-    director: {
+    director: [{
         '@type': {
             type: String,
             default: 'Person'
         },
         url: String,
         name: String,
-    },
+    }],
     creator: [{
-        '@type': String,
+        '@type': {
+            type: String,
+            default: 'Person'
+        },
         url: String,
         name: String,
         description: String

@@ -4,40 +4,49 @@ const mongoose = require('mongoose');
 
 module.exports = (app) => {
 
-    // Route pour ajouter un film
     app.post('/api/add-movie', async (req, res) => {
-        console.log("Données reçues :", req.body);
+        const { name, genre, url, actor, director, creator, image, keywords } = req.body;
     
-        // Déstructuration des données
-        const { name, datePublished, actor, director, genre, duration, url, description } = req.body;
-    
-        // Vérification des champs obligatoires
-        if (!name || !datePublished || !actor || !director || !genre || !duration || !url || !description) {
-            return res.status(400).json({ message: "Tous les champs sont requis." });
+        // Validation de base
+        if (!name || !genre || !url) {
+            return res.status(400).json({ message: 'Certains champs obligatoires sont manquants.' });
         }
     
+        // Création du film
         const newMovie = new Movie({
             _id: new mongoose.Types.ObjectId(),
-            '@context': 'http://schema.org',
             '@type': 'Movie',
             name,
-            datePublished,
-            actor: actor.map(a => ({ '@type': 'Person', name: a.name, url: a.url || '' })),
-            director: director.map(d => ({ '@type': 'Person', name: d.name, url: d.url || '' })),
             genre,
-            duration,
             url,
-            description
+            image,
+            keywords,
+            actor: actor ? actor.map(a => ({
+                '@type': a['@type'] || 'Person',
+                url: a.url,
+                name: a.name
+            })) : undefined,
+            director: director ? director.map(d => ({
+                '@type': d['@type'] || 'Person',
+                url: d.url,
+                name: d.name
+            })) : undefined,
+            creator: creator ? creator.map(c => ({
+                '@type': c['@type'] || 'Person',
+                url: c.url,
+                name: c.name,
+                description: c.description
+            })) : undefined
         });
     
         try {
             await newMovie.save();
             res.status(201).json({ message: 'Film ajouté avec succès !', movie: newMovie });
         } catch (error) {
-            console.error('Erreur lors de l\'ajout du film:', error);
-            res.status(500).json({ message: 'Erreur serveur lors de l\'ajout du film', error: error.message });
+            res.status(500).json({ message: 'Erreur lors de l\'ajout du film.', error: error.message });
         }
     });
+    
     
     // Route de mise à jour de film
     app.put('/api/update-movie', async (req, res) => {

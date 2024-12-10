@@ -1,53 +1,57 @@
+// Fonction pour extraire les données des champs multiples
+function extractData(containerId, inputClass) {
+    const elements = document.querySelectorAll(`#${containerId} .${inputClass}`);
+    return Array.from(elements).map(el => ({
+        name: el.querySelector('.actor-name')?.value || 
+              el.querySelector('.director-name')?.value || 
+              el.querySelector('.creator-name')?.value,
+        url: el.querySelector('.actor-url')?.value || 
+             el.querySelector('.director-url')?.value || 
+             el.querySelector('.creator-url')?.value,
+    })).filter(item => item.name && item.url);
+}
 
-
-// Fonction pour ajouter un film
+// Ajout de film
 async function addMovie(event) {
-    event.preventDefault(); // Empêche l'envoi du formulaire classique
+    event.preventDefault();
 
-    console.log("ouii");
-
-    // Récupération des valeurs des champs du formulaire
     const movieName = document.getElementById('add-name').value;
-    const releaseDate = document.getElementById('add-date').value;
-    const actors = document.getElementById('add-actors').value.split(',').map(actor => actor.trim());
-    const directors = document.getElementById('add-director').value.split(',').map(director => director.trim());
-    const genres = Array.from(document.querySelectorAll('#add-genres input:checked')).map(checkbox => checkbox.value);
-    const duration = document.getElementById('add-duration').value;
+    const genres = Array.from(document.querySelectorAll('#add-genres input:checked')).map(cb => cb.value);
+    const actors = extractData('add-actors', 'actor-input');
+    const directors = extractData('add-directors', 'director-input');
+    const creators = extractData('add-creators', 'creator-input');
     const url = document.getElementById('add-url').value;
-    const description = document.getElementById('add-description').value;
+    const imageUrl = document.getElementById('add-url-img').value;
+    const keywords = document.getElementById('add-keywords').value.split(',').map(keyword => keyword.trim());
 
-    // Vérification de la durée
-    const formattedDuration = `PT${Math.floor(duration / 60)}H${duration % 60}M`; // Conversion en format ISO
-
-    // Création de l'objet à envoyer
     const movieData = {
+        '@type': 'Movie',
         name: movieName,
-        datePublished: releaseDate,
-        actor: actors.map(name => ({ '@type': 'Person', name })),
-        director: directors.map(name => ({ '@type': 'Person', name })),
         genre: genres,
-        duration: formattedDuration,
+        actor: actors,
+        director: directors,
+        creator: creators,
         url: url,
-        description: description
+        image: imageUrl,
+        keywords: keywords, 
     };
-
-    console.log(movieData); // Vérifie que l'objet est correct
 
     const response = await fetch('/api/add-movie', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(movieData)  // Envoie l'objet film
+        body: JSON.stringify(movieData),
     });
 
-    const result = await response.json();
     if (response.ok) {
         alert('Film ajouté avec succès !');
     } else {
-        alert(`Erreur lors de l'ajout du film : ${result.message}`);
+        alert(`Erreur : ${await response.text()}`);
     }
 }
+
+
 
 // Fonction pour modifier un film
 async function updateMovie(event) {
@@ -113,6 +117,52 @@ async function deleteMovie(event) {
         alert(`Erreur lors de la suppression du film : ${result.message}`);
     }
 }
+
+//
+document.getElementById('add-actor-btn').addEventListener('click', () => {
+    const container = document.getElementById('add-actors');
+    const newField = document.createElement('div');
+    newField.className = 'actor-input';
+    newField.innerHTML = `
+        <input type="text" placeholder="Nom de l'acteur" class="actor-name">
+        <input type="text" placeholder="URL de l'acteur" class="actor-url">
+        <button type="button" class="remove-actor">Supprimer</button>
+    `;
+    newField.querySelector('.remove-actor').addEventListener('click', () => {
+        container.removeChild(newField);
+    });
+    container.appendChild(newField);
+});
+document.getElementById('add-director-btn').addEventListener('click', () => {
+    const container = document.getElementById('add-directors');
+    const newField = document.createElement('div');
+    newField.className = 'director-input';
+    newField.innerHTML = `
+        <input type="text" placeholder="Nom du directeur" class="director-name">
+        <input type="text" placeholder="URL du directeur" class="director-url">
+        <button type="button" class="remove-director">Supprimer</button>
+    `;
+    newField.querySelector('.remove-director').addEventListener('click', () => {
+        container.removeChild(newField);
+    });
+    container.appendChild(newField);
+});
+document.getElementById('add-creator-btn').addEventListener('click', () => {
+    const container = document.getElementById('add-creators');
+    const newField = document.createElement('div');
+    newField.className = 'creator-input';
+    newField.innerHTML = `
+        <input type="text" placeholder="Nom du directeur" class="creator-name">
+        <input type="text" placeholder="URL du directeur" class="creator-url">
+        <button type="button" class="remove-creator">Supprimer</button>
+    `;
+    newField.querySelector('.remove-creator').addEventListener('click', () => {
+        container.removeChild(newField);
+    });
+    container.appendChild(newField);
+});
+
+
 
 // Ajout des écouteurs d'événements
 document.getElementById('add-movie-form').addEventListener('submit', addMovie);

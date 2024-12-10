@@ -17,12 +17,6 @@
             <label for="add-date">Date de sortie :</label>
             <input type="date" id="add-date" required><br><br>
 
-            <label for="add-actors">Acteurs (séparés par des virgules) :</label>
-            <input type="text" id="add-actors" placeholder="Acteurs"><br><br>
-
-            <label for="add-director">Réalisateur :</label>
-            <input type="text" id="add-director" placeholder="Réalisateur" required><br><br>
-
             <label>Genres :</label>
             <div id="add-genres">
                 <input type="checkbox" name="genre" value="Action"> Action<br>
@@ -61,8 +55,50 @@
             <label for="add-url">URL du film :</label>
             <input type="text" id="add-url" placeholder="Lien vers le film"><br><br>
 
+            <label for="add-url-img">URL de l'Affiche du film :</label>
+            <input type="text" id="add-url-img" placeholder="Lien vers l'affiche du film"><br><br>
+
+            <label for="add-keywords">Mots clés (séparés par des virgules):</label>
+            <input type="text" id="add-keywords" placeholder="Mots,clés,virgules"><br><br>
+
             <label for="add-description">Description :</label>
             <textarea id="add-description" placeholder="Description du film" required></textarea><br><br>    
+
+            <label>Acteurs :</label>
+            <div id="add-actors">
+                <div class="actor-input">
+                    <input type="text" placeholder="Nom de l'acteur" class="actor-name">
+                    <input type="text" placeholder="URL de l'acteur" class="actor-url">
+                    <button type="button" class="remove-actor">Supprimer</button>
+                </div>
+            </div>
+            <button type="button" id="add-actor-btn">Ajouter un acteur</button>
+            
+            <br>
+
+            <label>Directeurs :</label>
+            <div id="add-directors">
+                <div class="director-input">
+                    <input type="text" placeholder="Nom du directeur" class="director-name">
+                    <input type="text" placeholder="URL du directeur" class="director-url">
+                    <button type="button" class="remove-directors">Supprimer</button>
+                </div>
+            </div>
+            <button type="button" id="add-director-btn">Ajouter un directeur</button>
+
+            <br>
+
+            <label>Createurs :</label>
+            <div id="add-creators">
+                <div class="creator-input">
+                    <input type="text" placeholder="Nom du createur" class="creator-name">
+                    <input type="text" placeholder="URL du createur" class="creator-url">
+                    <button type="button" class="remove-creators">Supprimer</button>
+                </div>
+            </div>
+            <button type="button" id="add-creator-btn">Ajouter un createur</button>
+
+            <br>
 
             <button type="submit">Ajouter</button>
         </form>
