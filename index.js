@@ -8,6 +8,11 @@ const app = express();
 const PORT = 2030;
 
 app.use(express.static('public'));
+app.use(express.json()); 
+
+
+const adminMovie = require('./fonctionnalites_js/admin_movie'); 
+adminMovie(app);
 
 
 // Connexion à MongoDB

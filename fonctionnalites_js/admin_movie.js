@@ -8,21 +8,15 @@ module.exports = (app) => {
     // Route pour ajouter un film
     app.post('/api/add-movie', async (req, res) => {
         console.log("Données reçues :", req.body);
-        
-        let requestBody;
-        try {
-            requestBody = JSON.parse(req.body); // Essaie de parser manuellement si nécessaire
-        } catch (error) {
-            console.error('Erreur lors du parsing JSON', error);
-            return res.status(400).json({ message: 'Erreur de parsing du JSON' });
-        }
-
+    
+        // Déstructuration des données
         const { name, datePublished, actor, director, genre, duration, url, description } = req.body;
-
+    
+        // Vérification des champs obligatoires
         if (!name || !datePublished || !actor || !director || !genre || !duration || !url || !description) {
             return res.status(400).json({ message: "Tous les champs sont requis." });
         }
-
+    
         const newMovie = new Movie({
             _id: new mongoose.Types.ObjectId(),
             '@context': 'http://schema.org',
@@ -36,7 +30,7 @@ module.exports = (app) => {
             url,
             description
         });
-
+    
         try {
             await newMovie.save();
             res.status(201).json({ message: 'Film ajouté avec succès !', movie: newMovie });
@@ -45,6 +39,7 @@ module.exports = (app) => {
             res.status(500).json({ message: 'Erreur serveur lors de l\'ajout du film', error: error.message });
         }
     });
+    
 
 
     
