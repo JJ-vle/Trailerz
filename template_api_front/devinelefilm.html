@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devine le Film</title>
+    <style>
+        #suggestions { list-style-type: none; padding: 0; }
+        .suggestion-item { cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Devine le Film</h1>
+
+    <div id="thumbnailContainer">
+        <img id="movieThumbnail" src="" alt="Film Thumbnail" width="200" style="display: none;">
+        <input type="hidden" id="movieId">
+    </div>
+
+    <h2>Entrez le nom du film :</h2>
+    <input type="text" id="movieInput" placeholder="Tapez un nom de film...">
+    <ul id="suggestions"></ul>
+
+    <p id="message"></p> <!-- Message de retour pour le jeu -->
+
+    <script src="/fonctionnalites_js/devinelefilm.js"></script>
+</body>
+</html>

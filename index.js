@@ -13,7 +13,8 @@ app.use(express.json());
 
 const adminMovie = require('./fonctionnalites_js/admin_movie'); 
 adminMovie(app);
-
+const devinelefilm = require('./fonctionnalites_js/devine_api'); 
+devinelefilm(app);
 
 // Connexion à MongoDB
 //mongoose.connect('mongodb://localhost:27017/trailerz', {
@@ -210,6 +211,10 @@ app.get('/derniers-films', (req, res) =>{
 
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'template_api_front/admin.html'));
+});
+
+app.get('/devine', (req, res) => {
+    res.sendFile(path.join(__dirname, 'template_api_front/devinelefilm.html'));
 });
 
 // Démarrage du serveur
