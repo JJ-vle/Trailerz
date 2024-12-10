@@ -50,12 +50,36 @@ module.exports = (app) => {
     
     // Route de mise à jour de film
     app.put('/api/update-movie', async (req, res) => {
-        const { id, ...updates } = req.body;
+        const { id, name, genre, url, actor, director, creator, image, keywords, datePublished, duration } = req.body;
     
-        // Vérification si l'ID est fourni
         if (!id) {
             return res.status(400).json({ message: 'L\'ID du film est requis.' });
         }
+    
+        const updates = {
+            ...(name && { name }),
+            ...(genre && { genre }),
+            ...(url && { url }),
+            ...(actor && { actor: actor.map(a => ({
+                '@type': a['@type'] || 'Person',
+                url: a.url,
+                name: a.name
+            })) }),
+            ...(director && { director: director.map(d => ({
+                '@type': d['@type'] || 'Person',
+                url: d.url,
+                name: d.name
+            })) }),
+            ...(creator && { creator: creator.map(c => ({
+                '@type': c['@type'] || 'Person',
+                url: c.url,
+                name: c.name,
+            })) }),
+            ...(image && { image }),
+            ...(keywords && { keywords }),
+            ...(datePublished && { datePublished }),
+            ...(duration && { duration })
+        };
     
         try {
             // Mise à jour du film avec les données fournies
@@ -71,6 +95,7 @@ module.exports = (app) => {
             res.status(500).json({ message: 'Erreur serveur lors de la mise à jour du film', error });
         }
     });
+    
 
 
     // Route de suppression de film

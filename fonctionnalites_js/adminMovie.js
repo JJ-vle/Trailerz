@@ -60,22 +60,28 @@ async function updateMovie(event) {
     const movieId = document.getElementById('update-id').value;
     const movieName = document.getElementById('update-name').value;
     const releaseDate = document.getElementById('update-date').value;
-    const actors = document.getElementById('update-actors').value.split(',').map(actor => actor.trim());
-    const directors = document.getElementById('update-director').value.split(',').map(director => director.trim());
+    const actors = extractData('update-actors', 'actor-input');
+    const directors = extractData('update-directors', 'director-input');
+    const creators = extractData('update-creators', 'creator-input');
     const genres = Array.from(document.querySelectorAll('#update-genres input:checked')).map(checkbox => checkbox.value);
     const duration = document.getElementById('update-duration').value;
     const url = document.getElementById('update-url').value;
+    const imageUrl = document.getElementById('update-url-img').value;
+    const keywords = document.getElementById('update-keywords')?.value.split(',').map(keyword => keyword.trim());
 
     // Préparer l'objet à envoyer
     const body = {
         id: movieId,
         ...(movieName && { name: movieName }),
         ...(releaseDate && { datePublished: releaseDate }),
-        ...(actors.length > 0 && { actor: actors.map(name => ({ name })) }),
-        ...(directors.length > 0 && { director: directors.map(name => ({ name })) }),
+        ...(actors.length > 0 && { actor: actors }),
+        ...(directors.length > 0 && { director: directors }),
+        ...(creators.length > 0 && { creator: creators }),
         ...(genres.length > 0 && { genre: genres }),
         ...(duration && { duration: `PT${Math.floor(duration / 60)}H${duration % 60}M` }),
-        ...(url && { url })
+        ...(url && { url }),
+        ...(imageUrl && { image: imageUrl }),
+        ...(keywords && { keywords })
     };
 
     // Envoyer la requête PUT
@@ -94,6 +100,7 @@ async function updateMovie(event) {
         alert(`Erreur lors de la mise à jour du film : ${result.message}`);
     }
 }
+
 
 
 // Fonction pour supprimer un film
@@ -154,6 +161,48 @@ document.getElementById('add-creator-btn').addEventListener('click', () => {
     newField.innerHTML = `
         <input type="text" placeholder="Nom du directeur" class="creator-name">
         <input type="text" placeholder="URL du directeur" class="creator-url">
+        <button type="button" class="remove-creator">Supprimer</button>
+    `;
+    newField.querySelector('.remove-creator').addEventListener('click', () => {
+        container.removeChild(newField);
+    });
+    container.appendChild(newField);
+});
+document.getElementById('update-actor-btn').addEventListener('click', () => {
+    const container = document.getElementById('update-actors');
+    const newField = document.createElement('div');
+    newField.className = 'actor-input';
+    newField.innerHTML = `
+        <input type="text" placeholder="Nom de l'acteur" class="actor-name">
+        <input type="text" placeholder="URL de l'acteur" class="actor-url">
+        <button type="button" class="remove-actor">Supprimer</button>
+    `;
+    newField.querySelector('.remove-actor').addEventListener('click', () => {
+        container.removeChild(newField);
+    });
+    container.appendChild(newField);
+});
+document.getElementById('update-director-btn').addEventListener('click', () => {
+    const container = document.getElementById('update-directors');
+    const newField = document.createElement('div');
+    newField.className = 'director-input';
+    newField.innerHTML = `
+        <input type="text" placeholder="Nom du directeur" class="director-name">
+        <input type="text" placeholder="URL du directeur" class="director-url">
+        <button type="button" class="remove-director">Supprimer</button>
+    `;
+    newField.querySelector('.remove-director').addEventListener('click', () => {
+        container.removeChild(newField);
+    });
+    container.appendChild(newField);
+});
+document.getElementById('update-creator-btn').addEventListener('click', () => {
+    const container = document.getElementById('update-creators');
+    const newField = document.createElement('div');
+    newField.className = 'creator-input';
+    newField.innerHTML = `
+        <input type="text" placeholder="Nom du créateur" class="creator-name">
+        <input type="text" placeholder="URL du créateur" class="creator-url">
         <button type="button" class="remove-creator">Supprimer</button>
     `;
     newField.querySelector('.remove-creator').addEventListener('click', () => {
