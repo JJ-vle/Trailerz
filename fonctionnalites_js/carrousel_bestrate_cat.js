@@ -48,8 +48,20 @@ module.exports = (app, mongoose, Movie) => {
                 return res.status(404).send(`Aucun film trouvé dans la catégorie "${category}"`);
             }
 
+            // Créer un Set pour éliminer les doublons basés sur l'ID
+            const uniqueMovies = new Set();
+            const filteredMovies = [];
+
+            for (const movie of movies) {
+                // Si le film n'est pas déjà dans le Set, on l'ajoute à la liste filtrée
+                if (!uniqueMovies.has(movie._id.toString())) {
+                    uniqueMovies.add(movie._id.toString());  // Ajouter l'ID du film au Set
+                    filteredMovies.push(movie);  // Ajouter le film à la liste filtrée
+                }
+            }
+
             // Construire une réponse contenant uniquement les affiches
-            const response = await Promise.all(movies.map(async (movie) => {
+            const response = await Promise.all(filteredMovies.map(async (movie) => {
                 // Vérification si l'image existe et est valide
                 let imageUrl = movie.image && movie.image.trim() ? movie.image : '../resources/trailerz_pochette_basique.png';
 
