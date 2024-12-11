@@ -77,6 +77,10 @@ app.get('/devine', (req, res) => {
     res.sendFile(path.join(__dirname, 'template_api_front/devinelefilm.html'));
 });
 
+app.get('/top_tendances', (req, res) => {
+    res.sendFile(path.join(__dirname, 'top_tendance.json')); //route du json pour le top tendance de la page d'accueil
+});
+
 
 //log exécution si tout est OK
 app.listen(PORT, () => {

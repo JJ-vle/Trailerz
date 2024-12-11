@@ -1,5 +1,4 @@
 // Liaison js du back au front pour le carrousel de sélection aléatoire
-
 document.addEventListener('DOMContentLoaded', async () => {
     const randomCarousel = document.querySelector('#random-carousel-container .carousel');
 
@@ -118,3 +117,51 @@ document.addEventListener('DOMContentLoaded', async () => {
     fetchAndDisplayMovies('Comedy', 'comedy-carousel-container');
     fetchAndDisplayMovies('War', 'war-carousel-container');
 });
+
+
+
+// Fonction pour récupérer l'ID d'un film à partir de son nom
+async function getMovieIdByName(movieName) {
+    try {
+        const response = await fetch(`/api/trouver-id?nom=${encodeURIComponent(movieName)}`);
+        if (!response.ok) {
+            throw new Error('Film non trouvé ou erreur serveur');
+        }
+        const data = await response.json();
+        return data.id;
+    } catch (error) {
+        console.error('Erreur lors de la récupération de l\'ID du film:', error);
+        return null;
+    }
+}
+
+// Fonction pour récuprérer données du top tendances
+async function fetchTopTendancesData() {
+    try {
+        const response = await fetch('/top_tendances'); //route du top (dans top_tendance.json à la racine)
+        if (!response.ok) {
+            throw new Error('Erreur lors de la récupération du fichier json !');
+        }
+        const topTendancesData = await response.json();
+
+        // Mise à jour des éléments HTML avec les données JSON
+        const topTendancesLink = document.querySelector('#top-tendances a');
+        const topTendancesImg = document.querySelector('#top-tendances img');
+        const topTendancesLogo = document.querySelector('#top-tendances .top-tendances-overlay img');
+
+        //envoie des données dans les balises du template html
+        topTendancesLink.setAttribute('href', `/film/${topTendancesData.id}`);
+        topTendancesImg.setAttribute('src', topTendancesData.UrlImage);
+        topTendancesLogo.setAttribute('src', topTendancesData.UrlLogoFilm);
+
+        // récupérer le nom du film du json pour l'envoyer ensuite à la fonction au dessus
+        const movieId = await getMovieIdByName(topTendancesData.NomFilm);
+        if (movieId) {
+            topTendancesLink.setAttribute('href', `/film/${movieId}`);
+        }
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données !', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', fetchTopTendancesData);
