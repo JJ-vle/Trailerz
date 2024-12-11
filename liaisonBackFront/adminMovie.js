@@ -16,42 +16,52 @@ async function addMovie(event) {
     event.preventDefault();
 
     const movieName = document.getElementById('add-name').value;
+    const datePublished = document.getElementById('add-date').value;
     const genres = Array.from(document.querySelectorAll('#add-genres input:checked')).map(cb => cb.value);
+    const duration = document.getElementById('add-duration').value;
+    const movieUrl = document.getElementById('add-url').value;
+    const posterUrl = document.getElementById('add-url-img').value;
+    const keywords = document.getElementById('add-keywords').value.split(',').map(k => k.trim());
+    const description = document.getElementById('add-description').value;
     const actors = extractData('add-actors', 'actor-input');
     const directors = extractData('add-directors', 'director-input');
     const creators = extractData('add-creators', 'creator-input');
-    const url = document.getElementById('add-url').value;
-    const imageUrl = document.getElementById('add-url-img').value;
-    const keywords = document.getElementById('add-keywords').value.split(',').map(keyword => keyword.trim());
 
     const movieData = {
-        '@type': 'Movie',
         name: movieName,
-        genre: genres,
-        actor: actors,
-        director: directors,
-        creator: creators,
-        url: url,
-        image: imageUrl,
-        keywords: keywords, 
+        datePublished, // Date de sortie
+        genres, // Genres sélectionnés
+        duration, // Durée en minutes
+        url: movieUrl, // Lien vers le film
+        image: posterUrl, // Lien vers l'affiche
+        keywords, // Mots-clés
+        description, // Description
+        actor: actors, // Acteurs
+        director: directors, // Réalisateurs
+        creator: creators, // Créateurs
     };
 
-    const response = await fetch('/api/add-movie', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(movieData),
-    });
+    try {
+        const response = await fetch('/api/add-movie', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(movieData),
+        });
 
-    if (response.ok) {
-        alert('Film ajouté avec succès !');
-    } else {
-        alert(`Erreur : ${await response.text()}`);
+        if (response.ok) {
+            alert('Film ajouté avec succès!');
+            document.getElementById('add-movie-form').reset();
+        } else {
+            const errorData = await response.json();
+            alert(`Erreur lors de l'ajout du film : ${errorData.message}`);
+        }
+    } catch (error) {
+        console.error('Erreur réseau:', error);
+        alert('Erreur réseau.');
     }
 }
-
-
 
 // Fonction pour modifier un film
 async function updateMovie(event) {
