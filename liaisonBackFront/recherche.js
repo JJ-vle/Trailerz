@@ -1,3 +1,4 @@
+// fonction de recherche d'un film
 async function searchMovies() {
     const name = document.getElementById('name').value;
     const startDate = document.getElementById('startDate').value;
@@ -19,6 +20,7 @@ async function searchMovies() {
 
         const resultsDiv = document.getElementById('results');
         resultsDiv.innerHTML = '';
+        // injection du film dans la page
         movies.forEach(movie => {
             resultsDiv.innerHTML += `
                 <a href="./film/${movie.id}">

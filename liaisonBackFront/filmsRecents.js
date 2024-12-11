@@ -1,6 +1,7 @@
 let currentPage = 1;
 const moviesPerPage = 15;
 
+// afficher les derniers films ajoutés
 async function fetchMovies(page) {
     try {
         const response = await fetch(`/api/derniers-films?page=${page}`);
@@ -15,6 +16,7 @@ async function fetchMovies(page) {
     }
 }
 
+//injection de l'affichage
 function displayMovies(movies) {
 const movieList = document.getElementById('movie-list');
 movieList.innerHTML = movies.map(movie => {
@@ -58,5 +60,5 @@ document.getElementById('next-page').addEventListener('click', () => {
     fetchMovies(currentPage);
 });
 
-// Charger la première page au démarrage
+
 fetchMovies(currentPage);
