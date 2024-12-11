@@ -1,7 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios');
-const cheerio = require('cheerio');
 const { Client } = require('youtubei');
 
 module.exports = (app, mongoose, Movie) => {
@@ -22,6 +20,23 @@ module.exports = (app, mongoose, Movie) => {
         }
 
         return `${hours > 0 ? hours + 'h' : ''}${minutes > 0 ? minutes : ''}`;
+    };
+
+    // transformation date de base en date de sortie
+    const formatReleaseDate = (date) => {
+        if (!date) return 'Rien à afficher';
+        
+        const months = [
+            'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+            'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+        ];
+    
+        const dateObj = new Date(date);
+        const day = dateObj.getDate();
+        const month = months[dateObj.getMonth()];
+        const year = dateObj.getFullYear();
+    
+        return `${day} ${month} ${year}`;
     };
 
     // étoiles de note
@@ -92,7 +107,8 @@ module.exports = (app, mongoose, Movie) => {
             htmlContent = htmlContent.replace(/{{image}}/g, movie.image || 'https://via.placeholder.com/500x750?text=Image+indisponible');
             htmlContent = htmlContent.replace(/{{url}}/g, addImdbUrl(movie.url));
             htmlContent = htmlContent.replace(/{{description}}/g, movie.description || 'Rien à afficher');
-            htmlContent = htmlContent.replace(/{{type}}/g, movie['@type'] || 'Rien à afficher');
+            htmlContent = htmlContent.replace(/{{releaseDate}}/g, formatReleaseDate(movie.datePublished));
+            htmlContent = htmlContent.replace(/{{genres}}/g, movie.genre && movie.genre.length > 0 ? movie.genre.join(', ') : 'Rien à afficher');
             htmlContent = htmlContent.replace(/{{duration}}/g, movie.duration ? formatDuration(movie.duration) : 'Rien à afficher');
             htmlContent = htmlContent.replace(/{{ratingStars}}/g, movie.aggregateRating ? generateStars(movie.aggregateRating.ratingValue) : 'Rien à afficher');
             htmlContent = htmlContent.replace(/{{ratingValue}}/g, movie.aggregateRating ? movie.aggregateRating.ratingValue : 'Rien à afficher');
@@ -102,7 +118,7 @@ module.exports = (app, mongoose, Movie) => {
 
             // Contenu en dessous : acteurs, réalisateurs, créateurs ---> Collections
             htmlContent = htmlContent.replace(/{{actors}}/g, movie.actor && movie.actor.length > 0 ? movie.actor.map(actor => `
-                <p><strong>${actor.name || 'Acteur inconnu'}</strong> - <a target="_blank" href="${addImdbUrl(actor.url)}">Voir profil</a></p>
+                <p><strong>${actor.name || 'Acteur inconnu'} - <a target="_blank" href="${addImdbUrl(actor.url)}">Voir profil</a></strong></p>
             `).join('') : '<p>Rien à afficher</p>');
 
             htmlContent = htmlContent.replace(/{{directors}}/g, movie.director && movie.director.length > 0 ? movie.director.map(director => `
@@ -117,11 +133,8 @@ module.exports = (app, mongoose, Movie) => {
             ` : '<p>Rien à afficher</p>');
 
             htmlContent = htmlContent.replace(/{{keywords}}/g, movie.keywords && movie.keywords.length > 0 ? movie.keywords.join(', ') : 'Rien à afficher');
-            htmlContent = htmlContent.replace(/{{budget}}/g, movie.budget || 'Rien à afficher');
 
             htmlContent = htmlContent.replace(/{{ytbTrailer}}/g, ytTrailerUrl || '#');
-
-            htmlContent = htmlContent.replace(/{{trailerUrl}}/g, addImdbUrl(movie.trailer ? movie.trailer.embedUrl : '#'));
 
 
             //on envoie le contenu

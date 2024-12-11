@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     fetchAndDisplayMovies('War', 'war-carousel-container');
 });
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Fonction pour récupérer l'ID d'un film à partir de son nom
 async function getMovieIdByName(movieName) {
