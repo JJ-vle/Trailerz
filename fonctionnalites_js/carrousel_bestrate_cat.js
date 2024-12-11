@@ -4,60 +4,54 @@ const fetch = require('node-fetch');
 
 module.exports = (app, mongoose, Movie) => {
 
-    // Cache des images déjà vérifiées
+    // mise en cache pour optimisation
     const imageCache = new Map();
 
-    // Fonction pour vérifier si une URL est valide
     const isImageValid = async (imageUrl) => {
-        // Vérifier dans le cache
         if (imageCache.has(imageUrl)) {
             return imageCache.get(imageUrl);
         }
 
         try {
             const response = await fetch(imageUrl, { method: 'HEAD' });
-            const isValid = response.ok; // Vérifier si l'image existe (code 2xx)
-            imageCache.set(imageUrl, isValid);  // Mettre en cache le résultat
+            const isValid = response.ok;
+            imageCache.set(imageUrl, isValid);
             return isValid;
         } catch (error) {
-            imageCache.set(imageUrl, false); // En cas d'erreur, on cache le résultat comme invalide
+            imageCache.set(imageUrl, false);
             return false;
         }
     };
 
-    // API pour afficher un carrousel des films les mieux notés et ayant le plus de notes par catégorie
+    // API pour afficher 12 affiches de films les mieux notés par catégorie spécifiée dans l'URL
     app.get('/api/carrousel-bestrate-cat', async (req, res) => {
-        const category = req.query.category;  // Récupérer la catégorie depuis le paramètre de requête
+        const category = req.query.category;
 
-        // Vérifier si une catégorie est fournie
         if (!category) {
             return res.status(400).send('Paramètre "category" manquant dans l\'URL');
         }
 
         try {
-            // Récupération des 12 films les mieux notés et ayant reçu le plus de votes dans la catégorie spécifiée
             const movies = await Movie.aggregate([
-                { $match: { genre: { $in: [category] } } },  // Filtrer les films ayant la catégorie spécifiée
-                { $match: { 'aggregateRating.ratingValue': { $exists: true, $ne: null }, 'aggregateRating.ratingCount': { $exists: true, $ne: null } } }, // Assurer que la note et le nombre de votes existent
-                { $sort: { 'aggregateRating.ratingValue': -1, 'aggregateRating.ratingCount': -1 } },  // Trier d'abord par note, puis par nombre de votes
-                { $limit: 12 },  // Limiter à 12 films
-                { $project: { _id: 1, image: 1, aggregateRating: 1 } } // Ne récupérer que les champs nécessaires
+                { $match: { genre: { $in: [category] } } },  //filtre en fonction de la catégorie voulue
+                { $match: { 'aggregateRating.ratingValue': { $exists: true, $ne: null }, 'aggregateRating.ratingCount': { $exists: true, $ne: null } } }, //nombre de votes et note existent ?
+                { $sort: { 'aggregateRating.ratingValue': -1, 'aggregateRating.ratingCount': -1 } },  //On trie par note et par nombre de votes
+                { $limit: 12 },  //12 uniquement
+                { $project: { _id: 1, image: 1, aggregateRating: 1 } }
             ]).exec();
 
             if (!movies || movies.length === 0) {
                 return res.status(404).send(`Aucun film trouvé dans la catégorie "${category}"`);
             }
 
-            // Construire une réponse contenant uniquement les affiches
+            //reponse API
             const response = await Promise.all(movies.map(async (movie) => {
-                // Vérification si l'image existe et est valide
                 let imageUrl = movie.image && movie.image.trim() ? movie.image : '../resources/trailerz_pochette_basique.png';
 
-                // Si l'image existe, on vérifie sa validité
                 if (imageUrl !== '../resources/trailerz_pochette_basique.png') {
                     const isValid = await isImageValid(imageUrl);
                     if (!isValid) {
-                        imageUrl = '../resources/trailerz_pochette_basique.png';  // Si l'image n'est pas valide, utiliser l'image par défaut
+                        imageUrl = '../resources/trailerz_pochette_basique.png';
                     }
                 }
 
