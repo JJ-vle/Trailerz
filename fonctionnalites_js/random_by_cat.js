@@ -68,5 +68,5 @@ module.exports = (app, mongoose, Movie) => {
         return url ? `https://www.imdb.com${url}` : '#';
     };
 
-    console.log('Route /api/random-movie ajoutée pour afficher un film aléatoire par catégorie.');
+    //console.log('Route /api/random-movie ajoutée pour afficher un film aléatoire par catégorie.');
 };

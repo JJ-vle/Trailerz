@@ -49,21 +49,21 @@ module.exports = (app, mongoose, Movie) => {
         try {
             const youtube = new Client();
             const searchQuery = `${movieName} Trailer VO`; //requete sur ytb
-            console.log("Recherche pour :", searchQuery);
+            //console.log("Recherche pour :", searchQuery);
             const searchResults = await youtube.search(searchQuery);
     
             if (searchResults && searchResults.items && searchResults.items.length > 0) {
                 const firstVideo = searchResults.items[0];
                 if (firstVideo.id) {
                     const embedUrl = `https://www.youtube.com/embed/${firstVideo.id}`; //url trouvé
-                    console.log("URL du trailer trouvé :", embedUrl);
+                    //console.log("URL du trailer trouvé :", embedUrl);
                     return embedUrl;
                 }
             }
-            console.log("Aucun résultat trouvé.");
+            //console.log("Aucun résultat trouvé.");
             return null;
         } catch (error) {
-            console.error('Erreur lors de la recherche sur YouTube:', error.message);
+            //console.error('Erreur lors de la recherche sur YouTube:', error.message);
             return null;
         }
     };
@@ -133,5 +133,5 @@ module.exports = (app, mongoose, Movie) => {
         }
     });
 
-    console.log('Route /film/:id ajoutée pour afficher les informations du film.');
+    //console.log('Route /film/:id ajoutée pour afficher les informations du film.');
 };

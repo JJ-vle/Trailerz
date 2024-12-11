@@ -104,5 +104,5 @@ module.exports = (app, mongoose, Movie) => {
         }
     });
 
-    console.log('Route /api/search-movie ajoutée pour la recherche de films.');
+    //console.log('Route /api/search-movie ajoutée pour la recherche de films.');
 };
