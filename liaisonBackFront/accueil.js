@@ -124,26 +124,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     fetchAndDisplayMovies('Comedy', 'comedy-carousel-container');  // Films d'aventure
     fetchAndDisplayMovies('War', 'war-carousel-container');  // Films de science-fiction
 });
-
-/*
-// Ajout pour intégrer l'image dans le HTML (Front-end JS inclus ici pour exemple)
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const response = await fetch('/api/best-rated-movie');
-
-        if (!response.ok) {
-            throw new Error('Erreur lors de la récupération du film le mieux noté');
-        }
-
-        const bestMovie = await response.json();
-
-        const topTendances = document.querySelector('#top-tendances');
-        const imgElement = topTendances.querySelector('img');
-
-        imgElement.src = bestMovie.image;
-        imgElement.alt = `Top 1 des tendances: ${bestMovie.name}`;
-    } catch (error) {
-        console.error('Erreur:', error);
-    }
-});
-*/

@@ -136,11 +136,60 @@ h1,p, a {
     filter: invert(1);
 }
 
+
+
+/* TOP TENDANCE */
+#top-tendances {
+    position: relative;
+    display: inline-block;
+}
+
+h2 stick{
+    background-color: #720000;
+}
+
+
 #top-tendances img {
     display: block;
     width: 100%;
     height: auto;
 }
+
+#top-tendances:hover img~div>img {
+    transform: scale(1.05);
+    transition: transform 0.3s;
+}
+.top-tendances-overlay img:not(:hover){
+    transition: transform 0.3s;
+}
+
+.top-tendances-overlay {
+    position: absolute;
+    top: 70%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    text-align: left;
+    color: white;
+    z-index: 10;
+}
+
+.top-tendances-overlay h2,
+.top-tendances-overlay h3 {
+    margin: 0;
+    font-size: 2rem;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+.top-tendances-overlay h2 {
+    font-weight: bold;
+}
+
+.top-tendances-overlay h3 {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 2.3rem;
+}
+
 
 
 .separator {
@@ -153,6 +202,75 @@ h1,p, a {
 
 
 /* CAROUSSELS DE FILMS */
+#random-carousel-container .carousel .movie {
+    filter: none;
+    transition: transform 0.3s, filter 0.3s ease;
+}
+
+#random-carousel-container .carousel:hover .movie {
+    filter: brightness(0.6);
+}
+
+#random-carousel-container .carousel .movie:hover {
+    filter: none;
+}
+
+/* CAROUSEL ACTION */
+#action-carousel-container .carousel .movie {
+    filter: none;
+    transition: transform 0.3s, filter 0.3s ease;
+}
+
+#action-carousel-container .carousel:hover .movie {
+    filter: brightness(0.6);
+}
+
+#action-carousel-container .carousel .movie:hover {
+    filter: none;
+}
+
+/* CAROUSEL COMEDIE */
+#comedy-carousel-container .carousel .movie {
+    filter: none;
+    transition: transform 0.3s, filter 0.3s ease;
+}
+
+#comedy-carousel-container .carousel:hover .movie {
+    filter: brightness(0.6);
+}
+
+#comedy-carousel-container .carousel .movie:hover {
+    filter: none;
+}
+
+/* CAROUSEL GUERRE */
+#war-carousel-container .carousel .movie {
+    filter: none;
+    transition: transform 0.3s, filter 0.3s ease;
+}
+
+#war-carousel-container .carousel:hover .movie {
+    filter: brightness(0.6);
+}
+
+#war-carousel-container .carousel .movie:hover {
+    filter: none;
+}
+
+/* CAROUSEL HORREUR */
+#horror-carousel-container .carousel .movie {
+    filter: none;
+    transition: transform 0.3s, filter 0.3s ease;
+}
+
+#horror-carousel-container .carousel:hover .movie {
+    filter: brightness(0.6);
+}
+
+#horror-carousel-container .carousel .movie:hover {
+    filter: none;
+}
+
 .carousel-container {
     position: relative;
     width: 100%;

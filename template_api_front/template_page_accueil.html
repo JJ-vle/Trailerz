@@ -19,7 +19,7 @@
                 <li><a href="../search">Recherche</a></li>
                 <li><a href="../random">Random</a></li>
                 <li><a href="../devine">Jeux</a></li>
-                <li><a href="../admin">🔑</a></li>
+                <li><a href="../admin">⚙️</a></li>
             </ul>
         </nav>
        
@@ -28,12 +28,16 @@
 
         <!-- Top 1 des tendances -->
         <div id="top-tendances">
-            <a href="http://localhost:2030/film/673769e2ba8709919a9f3e86"><img src="../resources/HomeAlone.jpg" alt="Top 1 des tendances"></a>
+            <a href="/film/673765688ec1027b29eadb65">
+                <img src="../resources/HomeAlone.jpg" alt="Top 1 des tendances">
+                <div class="top-tendances-overlay">
+                    <h2><stick>#Top 1 des tendances actuelles</stick></h2>
+                    <img src="../resources/homealone_logo.png" style="width: 500px; margin-top: 15px;">
+                </div>
+                
+            </a>
         </div>
 
-
-
-        <div class="separator"></div>
 
         <!-- Caroussel de sélection aléatoire -->
         <div class="carousel-container" id="random-carousel-container">
@@ -55,6 +59,8 @@
             </div>
             <button class="button next">&#8250;</button>
         </div>
+
+        <div class="separator"></div>
 
         <!-- Caroussel des la catégorie Action -->
         <div class="carousel-container" id="action-carousel-container">
