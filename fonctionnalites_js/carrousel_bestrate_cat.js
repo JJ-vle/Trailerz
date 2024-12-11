@@ -55,14 +55,14 @@ module.exports = (app, mongoose, Movie) => {
                     }
                 }
 
-                // Si la note existe et est une chaîne, on la convertit en nombre
+                // conversion de la note en nombre
                 const rating = parseFloat(movie.aggregateRating.ratingValue);
 
                 return {
                     id: movie._id,
                     image: imageUrl,
-                    rating: isNaN(rating) ? null : rating, // Inclure la note si elle est valide
-                    ratingCount: movie.aggregateRating.ratingCount // Inclure le nombre de votes
+                    rating: isNaN(rating) ? null : rating,
+                    ratingCount: movie.aggregateRating.ratingCount
                 };
             }));
 

@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", function() {
-    let currentThumbnailUrl = ''; // Stocke l'URL de la vignette du film actuel
-    let currentMovieId = ''; // Stocke l'ID du film actuel
-    let currentMovieName = ''; // Stocke le nom du film actuel
+    let currentThumbnailUrl = '';
+    let currentMovieId = '';
+    let currentMovieName = '';
 
     // Fonction pour récupérer un film aléatoire
     function getRandomMovie() {
         fetch('/api/random-movie')
             .then(response => response.json())
             .then(data => {
-                console.log("Réponse API:", data); // Debug
+                console.log("Réponse API:", data);
                 if (!data.name || !data.thumbnailUrl) {
                     throw new Error("Données du film incomplètes.");
                 }

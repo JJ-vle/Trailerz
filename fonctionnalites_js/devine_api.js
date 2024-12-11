@@ -1,9 +1,9 @@
-const Movie = require('../models/movie');  // Le modèle Movie
+const Movie = require('../models/movie');
 
 module.exports = (app) => {
-    let currentMovie = null; // Variable pour garder en mémoire le film actuel
+    let currentMovie = null;
 
-    // Route pour obtenir un film aléatoire avec un thumbnailUrl valide
+    // obtenir un film aléatoire avec un thumbnailUrl
     app.get('/api/random-movie', async (req, res) => {
         try {
             const randomMovie = await Movie.aggregate([
@@ -23,55 +23,29 @@ module.exports = (app) => {
                         message: "Nouveau film, à vous de jouer !"
                     });
                 } else {
-                    // Si le film n'a pas de thumbnailUrl valide
+                    // si pas de thumnnail valide
                     res.status(500).json({ message: "Film sans thumbnail valide" });
                 }
             } else {
                 res.status(404).json({ message: "Aucun film avec un thumbnail valide trouvé" });
             }
         } catch (error) {
-            console.error('Erreur lors de la récupération du film:', error); // Ajoute ceci pour plus de détails dans les logs
+            console.error('Erreur lors de la récupération du film:', error);
             res.status(500).json({ message: "Erreur serveur", error: error.message });
         }
     });
     
-    
-/*
-    // Route pour vérifier la réponse de l'utilisateur
-    app.post('/api/verify-answer', async (req, res) => {
-        const { answer } = req.body; // La réponse de l'utilisateur (nom du film)
-        
-        if (!currentMovie) {
-            return res.status(400).json({ message: "Aucun film en cours. Veuillez commencer un nouveau jeu." });
-        }
 
-        if (answer.trim().toLowerCase() === currentMovie.name.toLowerCase()) {
-            // Si la réponse est correcte, afficher "Bien joué" et donner un nouveau film
-            console.log(`Bonne réponse ! C'était : ${currentMovie.name}`);
-            currentMovie = null; // Réinitialiser le film en cours
-            res.json({
-                message: `Bien joué ! C'était "${currentMovie.name}"`,
-                success: true
-            });
-        } else {
-            // Si la réponse est incorrecte, afficher "Mauvaise réponse"
-            res.json({
-                message: "Mauvaise réponse. Continuez d'essayer !",
-                success: false
-            });
-        }
-    });*/
-
-    // Route pour rechercher des films par nom, avec un thumbnailUrl valide
+    // rechercher des films par nom
     app.get('/api/search-movies', async (req, res) => {
         const { query } = req.query;
         try {
             const movies = await Movie.find({
-                name: { $regex: query, $options: 'i' },  // Recherche insensible à la casse
-                'trailer.thumbnailUrl': { $ne: null, $ne: '' }  // Vérifie que thumbnailUrl existe et n'est pas vide
+                name: { $regex: query, $options: 'i' },  //insensible à la casse
+                'trailer.thumbnailUrl': { $ne: null, $ne: '' }
             })
-            .limit(5)  // Limiter à 5 résultats
-            .select('name trailer.thumbnailUrl');  // Se concentrer sur le nom et l'URL de l'image
+            .limit(5)  //max 5 affichés
+            .select('name trailer.thumbnailUrl');
 
             res.json({ movies });
         } catch (error) {

@@ -4,10 +4,9 @@ const fetch = require('node-fetch');
 
 module.exports = (app, mongoose, Movie) => {
 
-    // Cache des images déjà vérifiées
+    // mise en cache pour optimisation
     const imageCache = new Map();
 
-    // Fonction pour vérifier si une URL est valide
     const isImageValid = async (imageUrl) => {
         // Vérifier dans le cache
         if (imageCache.has(imageUrl)) {
@@ -16,38 +15,36 @@ module.exports = (app, mongoose, Movie) => {
 
         try {
             const response = await fetch(imageUrl, { method: 'HEAD' });
-            const isValid = response.ok; // Vérifier si l'image existe (code 2xx)
-            imageCache.set(imageUrl, isValid);  // Mettre en cache le résultat
+            const isValid = response.ok;
+            imageCache.set(imageUrl, isValid);
             return isValid;
         } catch (error) {
-            imageCache.set(imageUrl, false); // En cas d'erreur, on cache le résultat comme invalide
+            imageCache.set(imageUrl, false);
             return false;
         }
     };
 
-    // API pour afficher un carrousel de 12 affiches de films aléatoires
+    // API pour afficher 12 affiches de films aléatoires
     app.get('/api/carrousel-random', async (req, res) => {
         try {
-            // Récupération de 12 films aléatoires
+
             const movies = await Movie.aggregate([
                 { $sample: { size: 12 } },
-                { $project: { _id: 1, image: 1 } } // Ne récupérer que les champs nécessaires
+                { $project: { _id: 1, image: 1 } }
             ]).exec();
 
             if (!movies || movies.length === 0) {
                 return res.status(404).send('Aucune affiche trouvée');
             }
 
-            // Construire une réponse contenant uniquement les affiches
+            //réponse
             const response = await Promise.all(movies.map(async (movie) => {
-                // Vérification si l'image existe et est valide
+                //si l'image est valide sur le web et/ou existe
                 let imageUrl = movie.image && movie.image.trim() ? movie.image : '../resources/trailerz_pochette_basique.png';
-
-                // Si l'image existe, on vérifie sa validité
                 if (imageUrl !== '../resources/trailerz_pochette_basique.png') {
                     const isValid = await isImageValid(imageUrl);
                     if (!isValid) {
-                        imageUrl = '../resources/trailerz_pochette_basique.png';  // Si l'image n'est pas valide, utiliser l'image par défaut
+                        imageUrl = '../resources/trailerz_pochette_basique.png';
                     }
                 }
 
@@ -57,7 +54,7 @@ module.exports = (app, mongoose, Movie) => {
                 };
             }));
 
-            // Envoyer la réponse
+            //envoi réponse
             res.json(response);
         } catch (err) {
             console.error('Erreur:', err);
