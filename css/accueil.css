@@ -168,7 +168,7 @@ h1,p, a {
 }
   
 .movie {
-    flex: 0 0 calc(33.333% - 10px);
+    flex: 0 0 calc(16% - 10px);
     margin-right: 5px;
     margin-left: 5px;
     background-color: #222;
@@ -185,8 +185,12 @@ h1,p, a {
 .movie img {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover; /* Remplit toute la case en conservant le ratio */
+    object-position: center; /* Centre l'image dans la case */
 }
+
+
 
 .movie:hover {
     transform: scale(1.1);

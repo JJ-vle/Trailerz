@@ -14,14 +14,15 @@ mongoose.connect('mongodb://127.0.0.1:27017/trailerz', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
-    console.log('Connexion à Mongo OK');
+    console.log('>>> Connexion à Mongo OK');
+    console.log('*'.repeat(process.stdout.columns || 80));
 }).catch((err) => {
-    console.error('Erreur de connexion mongo :', err);
+    console.error('XXX Erreur de connexion mongo :', err);
 });
 
 //Si ok connecté
 mongoose.connection.on('connected', () => {
-    console.log('MongoDB connecté sur mongodb://localhost:27017/trailerz');
+    console.log('>>> MongoDB connecté sur mongodb://localhost:27017/trailerz');
 });
 //sinon
 mongoose.connection.on('error', (err) => {
@@ -40,11 +41,12 @@ if (!fs.existsSync(fonctionnalitesDir)) {
 fs.readdirSync(fonctionnalitesDir).forEach((file) => {
     if (file.endsWith('.js')) {
         const routePath = path.join(fonctionnalitesDir, file);
-        console.log(`Chargement de la fonctionnalité : ${file}`);
+        console.log(`--- Chargement de la fonctionnalité : ${file}`);
         require(routePath)(app, mongoose, Movie);
     }
-});
-
+}
+);
+console.log('>>> Chargement des routes OK\n');
 
 // Ajout du path princpal
 app.use(express.static(path.join(__dirname, './')));
@@ -78,5 +80,5 @@ app.get('/devine', (req, res) => {
 
 //log exécution si tout est OK
 app.listen(PORT, () => {
-    console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
+    console.log(`\n>>> Serveur en cours d'exécution sur http://localhost:${PORT}`);
 });

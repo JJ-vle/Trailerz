@@ -97,5 +97,4 @@ module.exports = (app, mongoose, Movie) => {
         }
     });
 
-    console.log('Route /film/:id ajoutée pour afficher les informations du film.');
 };
