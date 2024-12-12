@@ -73,15 +73,15 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error("Erreur : le nom du film actuel n'est pas défini.");
             return;
         }
-    
+
         const userAnswer = document.getElementById('movieInput').value.trim().toLowerCase();
-    
+
         // Comparer la réponse de l'utilisateur avec le nom du film stocké
         if (userAnswer === currentMovieName.toLowerCase()) {
             const messageElement = document.getElementById('message');
             messageElement.textContent = `Bien joué ! C'était "${currentMovieName}"`;
             messageElement.style.color = "green";
-    
+
             // Si la réponse est correcte, charger un nouveau film après 2 secondes
             setTimeout(() => {
                 getRandomMovie(); // Charger un nouveau film après la bonne réponse
@@ -92,8 +92,12 @@ document.addEventListener("DOMContentLoaded", function() {
             messageElement.textContent = "Mauvaise réponse, essayez encore !";
             messageElement.style.color = "red";
         }
+
+        // Vider le champ de saisie et la liste des suggestions
+        document.getElementById('movieInput').value = '';
+        document.getElementById('suggestions').innerHTML = '';
     }
-    
+        
 
     // Écouteur d'événement pour la saisie dans le champ de texte
     document.getElementById('movieInput').addEventListener('input', function(event) {
