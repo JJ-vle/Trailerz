@@ -11,6 +11,19 @@ function extractData(containerId, inputClass) {
     })).filter(item => item.name && item.url);
 }
 
+const formatDuration = (duration) => {
+    const parsedDuration = parseInt(duration, 10);
+    if (isNaN(parsedDuration) || parsedDuration < 0) {
+        return 'Rien à afficher'; // Gestion des cas invalides
+    }
+
+    const hours = Math.floor(parsedDuration / 60); // Calcul des heures
+    const minutes = parsedDuration % 60; // Minutes restantes
+
+    // Construction de la chaîne au format ISO 8601
+    return `PT${hours > 0 ? hours + 'H' : ''}${minutes > 0 ? minutes + 'M' : ''}`;
+};
+
 // Ajout de film
 async function addMovie(event) {
     event.preventDefault();
@@ -18,7 +31,7 @@ async function addMovie(event) {
     const movieName = document.getElementById('add-name').value;
     const datePublished = document.getElementById('add-date').value;
     const genres = Array.from(document.querySelectorAll('#add-genres input:checked')).map(cb => cb.value);
-    const duration = document.getElementById('add-duration').value;
+    const duration = formatDuration(document.getElementById('add-duration').value);
     const movieUrl = document.getElementById('add-url').value;
     const posterUrl = document.getElementById('add-url-img').value;
     const keywords = document.getElementById('add-keywords').value.split(',').map(k => k.trim());
@@ -31,7 +44,7 @@ async function addMovie(event) {
         name: movieName,
         datePublished, // Date de sortie
         genres, // Genres sélectionnés
-        duration, // Durée en minutes
+        duration, // Durée en ISO 8601
         url: movieUrl, // Lien vers le film
         image: posterUrl, // Lien vers l'affiche
         keywords, // Mots-clés
@@ -88,7 +101,7 @@ async function updateMovie(event) {
         ...(directors.length > 0 && { director: directors }),
         ...(creators.length > 0 && { creator: creators }),
         ...(genres.length > 0 && { genre: genres }),
-        ...(duration && { duration: `PT${Math.floor(duration / 60)}H${duration % 60}M` }),
+        ...(duration && { duration: formatDuration(duration) }),
         ...(url && { url }),
         ...(imageUrl && { image: imageUrl }),
         ...(keywords && { keywords })
@@ -135,7 +148,7 @@ async function deleteMovie(event) {
     }
 }
 
-//
+// Gestion des événements pour ajouter des champs dynamiques
 document.getElementById('add-actor-btn').addEventListener('click', () => {
     const container = document.getElementById('add-actors');
     const newField = document.createElement('div');
@@ -169,8 +182,8 @@ document.getElementById('add-creator-btn').addEventListener('click', () => {
     const newField = document.createElement('div');
     newField.className = 'creator-input';
     newField.innerHTML = `
-        <input type="text" placeholder="Nom du directeur" class="creator-name">
-        <input type="text" placeholder="URL du directeur" class="creator-url">
+        <input type="text" placeholder="Nom du créateur" class="creator-name">
+        <input type="text" placeholder="URL du créateur" class="creator-url">
         <button type="button" class="remove-creator">Supprimer</button>
     `;
     newField.querySelector('.remove-creator').addEventListener('click', () => {
