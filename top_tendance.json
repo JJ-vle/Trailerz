@@ -1,5 +1,5 @@
 {
    "NomFilm": "Home Alone",
-   "UrlImage": "https://image.tmdb.org/t/p/original/Yb2JZbnQrxwe8T4ymWxvjHMysp.jpg",
-   "UrlLogoFilm": "https://image.tmdb.org/t/p/original/jAebWbvEJg4PeAtjn3kxocK28BB.png"
+   "UrlImage": "resources/ptdr.png",
+   "UrlLogoFilm": "resources/iutalone.png"
 }
