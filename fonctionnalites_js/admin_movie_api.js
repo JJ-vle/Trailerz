@@ -1,6 +1,8 @@
 const express = require('express');
 const Movie = require('../models/movie');
 const mongoose = require('mongoose');
+const path = require('path');
+const fs = require('fs');
 
 module.exports = (app) => {
 
@@ -61,7 +63,6 @@ module.exports = (app) => {
         }
     });
     
-    
     // Route de mise à jour de film
     app.put('/api/update-movie', async (req, res) => {
         const { id, name, genre, url, actor, director, creator, image, keywords, datePublished, duration } = req.body;
@@ -110,8 +111,6 @@ module.exports = (app) => {
         }
     });
     
-
-
     // Route de suppression de film
     app.delete('/api/delete-movie', async (req, res) => {
         const { id } = req.body;
@@ -132,5 +131,21 @@ module.exports = (app) => {
             console.error('Erreur lors de la suppression du film', error);
             res.status(500).json({ message: 'Erreur serveur lors de la suppression du film', error });
         }
+    });
+
+    // Définir le chemin du fichier JSON
+    const jsonFilePath = path.join(__dirname, '../top_tendance.json');
+
+    // Route pour mettre à jour le fichier JSON
+    app.post('/api/update-json', (req, res) => {
+        const newData = req.body;
+
+        // Remplacer les données dans le fichier JSON
+        fs.writeFile(jsonFilePath, JSON.stringify(newData, null, 2), 'utf8', (err) => {
+            if (err) {
+                return res.status(500).json({ message: 'Erreur lors de l\'écriture du fichier JSON', error: err });
+            }
+            res.json({ message: 'Fichier JSON mis à jour avec succès !' });
+        });
     });
 };
